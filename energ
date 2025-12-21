@@ -23,6 +23,12 @@ def _parse_args() -> argparse.Namespace:
     # energy generation
     p.add_argument("--sigma", type=float, default=1.0, help="Gaussian blur sigma before gradients.")
     
+    # energy enhancement
+    p.add_argument("--enhance-energy", action="store_true", help="Enhance energy map for better edge detection.")
+    p.add_argument("--enhance-horizontal", type=float, default=1.0, help="Horizontal edge enhancement factor (1.0=no enhancement, >1.0=enhance).")
+    p.add_argument("--enhance-vertical", type=float, default=1.0, help="Vertical edge enhancement factor (1.0=no enhancement, >1.0=enhance).")
+    p.add_argument("--enhance-directional", action="store_true", help="Enable directional edge enhancement (horizontal vs vertical).")
+    
     # grid detection
     p.add_argument("--gap-size", type=int, default=8, help="Expected gap size (pixels) between grid lines.")
     p.add_argument("--gap-tolerance", type=int, default=2, help="Tolerance around gap size (±pixels).")
@@ -59,6 +65,36 @@ def _grad_energy(gray_u8: np.ndarray, sigma: float) -> np.ndarray:
     gx = cv2.Sobel(g, cv2.CV_32F, 1, 0, ksize=3)
     gy = cv2.Sobel(g, cv2.CV_32F, 0, 1, ksize=3)
     return np.abs(gx) + np.abs(gy)
+
+
+def _enhance_energy_directional(energy: np.ndarray,
+                             horizontal_factor: float = 1.0,
+                             vertical_factor: float = 1.0) -> np.ndarray:
+    """Enhance energy map with directional edge emphasis."""
+    if horizontal_factor == 1.0 and vertical_factor == 1.0:
+        return energy
+    
+    # Calculate gradients
+    gx = cv2.Sobel(energy, cv2.CV_32F, 1, 0, ksize=3)
+    gy = cv2.Sobel(energy, cv2.CV_32F, 0, 1, ksize=3)
+    
+    # Create directional enhancement masks
+    enhanced = energy.copy()
+    
+    if horizontal_factor > 1.0:
+        # Enhance horizontal edges (stronger response to vertical gradients)
+        horizontal_enhancement = np.abs(gy) * (horizontal_factor - 1.0)
+        enhanced += horizontal_enhancement
+    
+    if vertical_factor > 1.0:
+        # Enhance vertical edges (stronger response to horizontal gradients)
+        vertical_enhancement = np.abs(gx) * (vertical_factor - 1.0)
+        enhanced += vertical_enhancement
+    
+    # Clip to reasonable range
+    enhanced = np.clip(enhanced, 0, np.percentile(energy, 99.9))
+    
+    return enhanced
 
 
 def _to_u8_heatmap(e: np.ndarray) -> np.ndarray:
@@ -346,6 +382,26 @@ def main() -> None:
     
     # Generate energy
     energy = _grad_energy(gray, sigma=float(args.sigma))
+    
+    # Apply energy enhancement if requested
+    if args.enhance_energy:
+        if args.enhance_directional:
+            # Directional enhancement
+            energy = _enhance_energy_directional(
+                energy,
+                horizontal_factor=float(args.enhance_horizontal),
+                vertical_factor=float(args.enhance_vertical)
+            )
+            print(f"Applied directional enhancement: H={args.enhance_horizontal}x, V={args.enhance_vertical}x")
+        else:
+            # General enhancement (boost both directions equally)
+            energy = _enhance_energy_directional(
+                energy,
+                horizontal_factor=1.5,
+                vertical_factor=1.5
+            )
+            print("Applied general energy enhancement: 1.5x")
+    
     energy_u8 = _to_u8_heatmap(energy)
     
     print(f"Energy range: [{energy.min():.4f}, {energy.max():.4f}]")
