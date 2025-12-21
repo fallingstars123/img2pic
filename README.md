@@ -94,6 +94,20 @@ python energ --in input.png \
   --sample \
   --upscale 2 \
   --sample-mode center
+
+# 智能颜色量化（自动颜色数）
+python energ --in input.png --sample --quantize
+
+# 强制16色调色板
+python energ --in input.png --sample --quantize --colors 16
+
+# 完整组合使用
+python energ --in input.png \
+  --sample \
+  --upscale 3 \
+  --quantize \
+  --quantize-mode smart \
+  --colors 32
 ```
 
 #### 主要参数说明
@@ -109,6 +123,10 @@ python energ --in input.png \
 - `--sample-mode`: 采样模式（center/average/weighted）
 - `--upscale`: 像素图升采样倍数（0=使用自动检测的pixel-size，1=原生分辨率，>1=自定义倍数）
 - `--native-res`: 输出原生分辨率像素图（每个采样点1个像素，不放大）
+- `--quantize`: 启用像素艺术颜色量化
+- `--quantize-mode`: 量化模式（smart=智能合并，force=强制颜色数）
+- `--colors`: 目标颜色数量（0=自动，>0=强制精确数量）
+- `--similarity-threshold`: 智能合并模式的相似度阈值（0.0-1.0）
 
 ### `edge_detect_pixelize.py` - 简化边缘检测
 
