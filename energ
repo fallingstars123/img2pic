@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 """
-End-to-end: from image to energy map with interpolated grid lines.
-Combines energy generation + grid line detection + visualization.
+End-to-end: from image to energy map with interpolated grid lines and pixel art sampling.
+Combines energy generation + grid line detection + visualization + auto pixel size detection.
 """
 from __future__ import annotations
 
@@ -38,7 +38,9 @@ def _parse_args() -> argparse.Namespace:
     p.add_argument("--sample-mode", type=str, default="center", choices=["center", "average", "weighted"],
                    help="Sampling mode: center=point color, average=cell average, weighted=weighted average around center.")
     p.add_argument("--sample-weight-ratio", type=float, default=0.6, help="Weight ratio for weighted mode (0.1-0.9).")
-    p.add_argument("--pixel-size", type=int, default=8, help="Size of each pixel in output pixel art.")
+    p.add_argument("--pixel-size", type=int, default=0, help="Size of each pixel in output pixel art. 0=auto-detect.")
+    p.add_argument("--min-s", type=int, default=4, help="Min pixel period to search (auto-detect mode).")
+    p.add_argument("--max-s", type=int, default=24, help="Max pixel period to search (auto-detect mode).")
     
     return p.parse_args()
 
@@ -282,6 +284,50 @@ def _sample_pixel_art(original_rgb: np.ndarray,
     return output
 
 
+def _detrend_1d(x: np.ndarray, win: int = 101) -> np.ndarray:
+    """Remove trend from 1D signal using moving average."""
+    win = int(win)
+    if win < 3:
+        return x - x.mean()
+    if win % 2 == 0:
+        win += 1
+    k = np.ones(win, dtype=np.float32) / float(win)
+    sm = np.convolve(x.astype(np.float32), k, mode="same")
+    y = x.astype(np.float32) - sm
+    y -= y.mean()
+    return y
+
+
+def _autocorr_score(x: np.ndarray, lag: int) -> float:
+    """Calculate normalized autocorrelation score at given lag."""
+    a = x[:-lag]
+    b = x[lag:]
+    denom = (np.linalg.norm(a) * np.linalg.norm(b) + 1e-9)
+    return float(np.dot(a, b) / denom)
+
+
+def _detect_pixel_size(energy: np.ndarray, min_s: int, max_s: int) -> int:
+    """Auto-detect pixel size using autocorrelation."""
+    # projections
+    px = energy.sum(axis=0)
+    py = energy.sum(axis=1)
+
+    px = _detrend_1d(px, win=min(401, max(31, energy.shape[1] // 10 * 2 + 1)))
+    py = _detrend_1d(py, win=min(401, max(31, energy.shape[0] // 10 * 2 + 1)))
+
+    # score by autocorrelation peaks; combine x/y
+    best_s = min_s
+    best = -1e9
+    for s in range(min_s, max_s + 1):
+        sx = _autocorr_score(px, s) if len(px) > s + 10 else -1e9
+        sy = _autocorr_score(py, s) if len(py) > s + 10 else -1e9
+        score = sx + sy
+        if score > best:
+            best = score
+            best_s = s
+    return best_s
+
+
 def main() -> None:
     args = _parse_args()
     input_path = Path(args.input_path)
@@ -304,10 +350,17 @@ def main() -> None:
     
     print(f"Energy range: [{energy.min():.4f}, {energy.max():.4f}]")
     
+    # Auto-detect pixel size if needed
+    pixel_size = int(args.pixel_size)
+    if pixel_size == 0:
+        detected_size = _detect_pixel_size(energy, int(args.min_s), int(args.max_s))
+        pixel_size = detected_size
+        print(f"Auto-detected pixel size: {pixel_size}")
+    
     # Detect grid lines
     x_lines, y_lines = _detect_grid_lines(
         energy_map=energy_u8,
-        gap_size=int(args.gap_size),
+        gap_size=pixel_size,
         gap_tolerance=int(args.gap_tolerance),
         min_energy=float(args.min_energy),
         smooth=int(args.smooth)
@@ -325,11 +378,125 @@ def main() -> None:
         line_width=int(args.line_width)
     )
     
+    # Add edge lines to ensure complete grid coverage
+    h, w = energy_u8.shape[:2]
+    
+    # Calculate typical gap from existing lines
+    if len(all_x_lines) > 1:
+        x_gaps = [all_x_lines[i+1] - all_x_lines[i] for i in range(len(all_x_lines)-1)]
+        typical_x_gap = int(np.median(x_gaps))
+    else:
+        typical_x_gap = pixel_size
+    
+    if len(all_y_lines) > 1:
+        y_gaps = [all_y_lines[i+1] - all_y_lines[i] for i in range(len(all_y_lines)-1)]
+        typical_y_gap = int(np.median(y_gaps))
+    else:
+        typical_y_gap = pixel_size
+    
+    # Get tolerance for edge line detection (same as grid detection)
+    gap_tolerance = int(args.gap_tolerance)
+    
+    # Add edge lines that align with pixel size pattern (with tolerance)
+    # Left edge: extend backward from first line by pixel_size steps
+    if not all_x_lines or all_x_lines[0] > 0:
+        first_x = all_x_lines[0] if all_x_lines else pixel_size
+        edge_x = []
+        x = first_x
+        while x > 0:
+            x -= typical_x_gap
+            if x >= 0:
+                edge_x.append(x)
+        all_x_lines = sorted(set(edge_x + all_x_lines))
+    
+    # Right edge: extend forward from last line by pixel_size steps
+    if not all_x_lines or all_x_lines[-1] < w - 1:
+        last_x = all_x_lines[-1] if all_x_lines else w - pixel_size - 1
+        edge_x = []
+        x = last_x
+        while x < w - 1:
+            x += typical_x_gap
+            if x < w:
+                edge_x.append(x)
+        all_x_lines = sorted(set(all_x_lines + edge_x))
+    
+    # Top edge: extend backward from first line by pixel_size steps
+    if not all_y_lines or all_y_lines[0] > 0:
+        first_y = all_y_lines[0] if all_y_lines else pixel_size
+        edge_y = []
+        y = first_y
+        while y > 0:
+            y -= typical_y_gap
+            if y >= 0:
+                edge_y.append(y)
+        all_y_lines = sorted(set(edge_y + all_y_lines))
+    
+    # Bottom edge: extend forward from last line by pixel_size steps
+    if not all_y_lines or all_y_lines[-1] < h - 1:
+        last_y = all_y_lines[-1] if all_y_lines else h - pixel_size - 1
+        edge_y = []
+        y = last_y
+        while y < h - 1:
+            y += typical_y_gap
+            if y < h:
+                edge_y.append(y)
+        all_y_lines = sorted(set(all_y_lines + edge_y))
+    
+    # Filter edge lines to match gap tolerance (same as detection)
+    # This ensures edge lines follow the same tolerance rules as detected lines
+    filtered_x_lines = []
+    if all_x_lines:
+        filtered_x_lines = [all_x_lines[0]]
+        for i in range(1, len(all_x_lines)):
+            spacing = all_x_lines[i] - all_x_lines[i-1]
+            if abs(spacing - typical_x_gap) <= gap_tolerance or spacing > typical_x_gap + gap_tolerance:
+                filtered_x_lines.append(all_x_lines[i])
+    
+    filtered_y_lines = []
+    if all_y_lines:
+        filtered_y_lines = [all_y_lines[0]]
+        for i in range(1, len(all_y_lines)):
+            spacing = all_y_lines[i] - all_y_lines[i-1]
+            if abs(spacing - typical_y_gap) <= gap_tolerance or spacing > typical_y_gap + gap_tolerance:
+                filtered_y_lines.append(all_y_lines[i])
+    
+    # Sort lines and remove duplicates
+    all_x_lines = sorted(set(filtered_x_lines))
+    all_y_lines = sorted(set(filtered_y_lines))
+    
+    # Final check: ensure we have lines at actual image edges
+    # Add 0 and w-1/h-1 if they're missing and within tolerance
+    if 0 not in all_x_lines:
+        if all_x_lines and abs(all_x_lines[0] - 0) <= typical_x_gap + gap_tolerance:
+            all_x_lines.insert(0, 0)
+        elif not all_x_lines:
+            all_x_lines = [0]
+    
+    if (w - 1) not in all_x_lines:
+        if all_x_lines and abs((w - 1) - all_x_lines[-1]) <= typical_x_gap + gap_tolerance:
+            all_x_lines.append(w - 1)
+        elif not all_x_lines:
+            all_x_lines = [w - 1]
+    
+    if 0 not in all_y_lines:
+        if all_y_lines and abs(all_y_lines[0] - 0) <= typical_y_gap + gap_tolerance:
+            all_y_lines.insert(0, 0)
+        elif not all_y_lines:
+            all_y_lines = [0]
+    
+    if (h - 1) not in all_y_lines:
+        if all_y_lines and abs((h - 1) - all_y_lines[-1]) <= typical_y_gap + gap_tolerance:
+            all_y_lines.append(h - 1)
+        elif not all_y_lines:
+            all_y_lines = [h - 1]
+    
+    # Final sort
+    all_x_lines = sorted(set(all_x_lines))
+    all_y_lines = sorted(set(all_y_lines))
+    
     # Draw grid cell center points in green (1px dots)
     vis_pil = Image.fromarray(vis)
     draw = ImageDraw.Draw(vis_pil)
-    
-    h, w = vis.shape[:2]
     
     # For each pair of adjacent x lines and adjacent y lines, draw center point
     for i in range(len(all_x_lines) - 1):
@@ -362,17 +529,18 @@ def main() -> None:
             all_y_lines=all_y_lines,
             mode=args.sample_mode,
             weight_ratio=float(args.sample_weight_ratio),
-            pixel_size=int(args.pixel_size)
+            pixel_size=pixel_size
         )
         
         # Save pixel art
         pixel_output_path = output_path.parent / f"{output_path.stem}_pixel_art{output_path.suffix}"
         Image.fromarray(pixel_art).save(pixel_output_path)
         print(f"Saved pixel art: {pixel_output_path}")
-        print(f"Pixel art size: {pixel_art.shape[1]}x{pixel_art.shape[0]} ({pixel_art.shape[1]//int(args.pixel_size)}×{pixel_art.shape[0]//int(args.pixel_size)} pixels)")
+        print(f"Pixel art size: {pixel_art.shape[1]}x{pixel_art.shape[0]} ({pixel_art.shape[1]//pixel_size}×{pixel_art.shape[0]//pixel_size} pixels)")
         print(f"Sampling mode: {args.sample_mode}")
         if args.sample_mode == "weighted":
             print(f"Weight ratio: {args.sample_weight_ratio}")
+        print(f"Pixel size: {pixel_size}px")
 
 
 if __name__ == "__main__":
