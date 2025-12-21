@@ -1,6 +1,7 @@
 [workspace]
 authors = ["AndreaFrederica <andreafrederica@outlook.com>"]
 channels = ["conda-forge"]
+license = "MPL-2.0"
 name = "img2pic"
 platforms = ["win-64"]
 version = "0.1.0"
@@ -18,3 +19,5 @@ numpy = "*"
 [pypi-dependencies]
 opencv-python = ">=4.11.0.86, <5"
 scipy = ">=1.15.0, <2"
+scikit-learn = ">=1.6.0, <2"
+networkx = ">=3.0, <4"

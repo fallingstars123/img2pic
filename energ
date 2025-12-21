@@ -39,6 +39,7 @@ def _parse_args() -> argparse.Namespace:
     # visualization
     p.add_argument("--line-color", type=str, default="red", help="Detected line color.")
     p.add_argument("--line-width", type=int, default=1, help="Line width (pixels).")
+    p.add_argument("--save-energy", action="store_true", help="Save pure energy map for debugging.")
     
     # pixel art sampling
     p.add_argument("--sample", action="store_true", help="Generate pixel art from sampled colors.")
@@ -46,6 +47,8 @@ def _parse_args() -> argparse.Namespace:
                    help="Sampling mode: center=point color, average=cell average, weighted=weighted average around center.")
     p.add_argument("--sample-weight-ratio", type=float, default=0.6, help="Weight ratio for weighted mode (0.1-0.9).")
     p.add_argument("--pixel-size", type=int, default=0, help="Size of each pixel in output pixel art. 0=auto-detect.")
+    p.add_argument("--upscale", type=int, default=0, help="Upscale factor for pixel art (0=use pixel-size, 1=native res, >1=custom scale).")
+    p.add_argument("--native-res", action="store_true", help="Output pixel art at native resolution (1 pixel per cell, no upscaling).")
     p.add_argument("--min-s", type=int, default=4, help="Min pixel period to search (auto-detect mode).")
     p.add_argument("--max-s", type=int, default=24, help="Max pixel period to search (auto-detect mode).")
     
@@ -334,7 +337,8 @@ def _sample_pixel_art(original_rgb: np.ndarray,
                       all_y_lines: list[int],
                       mode: str = "center",
                       weight_ratio: float = 0.6,
-                      pixel_size: int = 8) -> np.ndarray:
+                      pixel_size: int = 8,
+                      native_res: bool = False) -> np.ndarray:
     """Sample colors at grid cell centers and create pixel art."""
     h, w = original_rgb.shape[:2]
     
@@ -342,7 +346,12 @@ def _sample_pixel_art(original_rgb: np.ndarray,
     cell_width = len(all_x_lines) - 1
     cell_height = len(all_y_lines) - 1
     
-    output = np.zeros((cell_height * pixel_size, cell_width * pixel_size, 3), dtype=np.uint8)
+    if native_res:
+        # Native resolution: 1 pixel per cell
+        output = np.zeros((cell_height, cell_width, 3), dtype=np.uint8)
+    else:
+        # Upscaled: pixel_size pixels per cell
+        output = np.zeros((cell_height * pixel_size, cell_width * pixel_size, 3), dtype=np.uint8)
     
     # For each cell, sample color and draw pixel
     for i in range(len(all_x_lines) - 1):
@@ -383,10 +392,14 @@ def _sample_pixel_art(original_rgb: np.ndarray,
                 color = original_rgb[cy, cx]
             
             # Draw pixel in output image (pixel art coordinates)
-            out_x = i * pixel_size
-            out_y = j * pixel_size
-            
-            output[out_y:out_y + pixel_size, out_x:out_x + pixel_size] = color
+            if native_res:
+                # Native resolution: 1 pixel per cell
+                output[j, i] = color
+            else:
+                # Upscaled: pixel_size pixels per cell
+                out_x = i * pixel_size
+                out_y = j * pixel_size
+                output[out_y:out_y + pixel_size, out_x:out_x + pixel_size] = color
     
     return output
 
@@ -476,6 +489,12 @@ def main() -> None:
     energy_u8 = _to_u8_heatmap(energy)
     
     print(f"Energy range: [{energy.min():.4f}, {energy.max():.4f}]")
+    
+    # Save pure energy map if requested
+    if args.save_energy:
+        energy_output_path = output_path.parent / f"{output_path.stem}_pure_energy{output_path.suffix}"
+        Image.fromarray(energy_u8).save(energy_output_path)
+        print(f"Saved pure energy map: {energy_output_path}")
     
     # Auto-detect pixel size if needed
     pixel_size = int(args.pixel_size)
@@ -651,24 +670,39 @@ def main() -> None:
     
     # Generate pixel art if requested
     if args.sample:
+        # Determine upscale factor
+        if args.upscale > 0:
+            upscale_factor = args.upscale
+        elif args.native_res:
+            upscale_factor = 1
+        else:
+            # Default: use auto-detected pixel_size or specified pixel-size
+            upscale_factor = pixel_size
+        
         pixel_art = _sample_pixel_art(
             original_rgb=rgb,
             all_x_lines=all_x_lines,
             all_y_lines=all_y_lines,
             mode=args.sample_mode,
             weight_ratio=float(args.sample_weight_ratio),
-            pixel_size=pixel_size
+            pixel_size=upscale_factor,
+            native_res=(upscale_factor == 1)
         )
         
         # Save pixel art
         pixel_output_path = output_path.parent / f"{output_path.stem}_pixel_art{output_path.suffix}"
         Image.fromarray(pixel_art).save(pixel_output_path)
         print(f"Saved pixel art: {pixel_output_path}")
-        print(f"Pixel art size: {pixel_art.shape[1]}x{pixel_art.shape[0]} ({pixel_art.shape[1]//pixel_size}×{pixel_art.shape[0]//pixel_size} pixels)")
+        
+        if upscale_factor == 1:
+            print(f"Pixel art size: {pixel_art.shape[1]}x{pixel_art.shape[0]} ({pixel_art.shape[1]}×{pixel_art.shape[0]} pixels) - Native resolution")
+        else:
+            print(f"Pixel art size: {pixel_art.shape[1]}x{pixel_art.shape[0]} ({pixel_art.shape[1]//upscale_factor}×{pixel_art.shape[0]//upscale_factor} pixels) - {upscale_factor}x upscale")
+        
         print(f"Sampling mode: {args.sample_mode}")
         if args.sample_mode == "weighted":
             print(f"Weight ratio: {args.sample_weight_ratio}")
-        print(f"Pixel size: {pixel_size}px")
+        print(f"Upscale factor: {upscale_factor}x")
 
 
 if __name__ == "__main__":

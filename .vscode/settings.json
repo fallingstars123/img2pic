@@ -1,13 +1,21 @@
 {
     "cSpell.words": [
+        "autocorr",
+        "detrend",
+        "energ",
         "fromarray",
+        "interp",
         "keepdims",
+        "kmeans",
         "ksize",
         "linalg",
+        "ndimage",
+        "networkx",
         "numpy",
         "opencv",
         "pixelizing",
         "pypi",
+        "scikit",
         "scipy",
         "sobel"
     ]
