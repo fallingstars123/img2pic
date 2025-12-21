@@ -1,0 +1,20 @@
+[workspace]
+authors = ["AndreaFrederica <andreafrederica@outlook.com>"]
+channels = ["conda-forge"]
+name = "img2pic"
+platforms = ["win-64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+python = ">=3.14.2,<3.15"
+pillow = ">=12.0.0,<13"
+numpy = "*"
+
+
+
+
+[pypi-dependencies]
+opencv-python = ">=4.11.0.86, <5"
+scipy = ">=1.15.0, <2"
