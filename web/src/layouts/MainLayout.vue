@@ -75,6 +75,7 @@ const languageOptions = [
   { value: 'zh-CN', label: '简体中文' },
   { value: 'zh-TW', label: '繁體中文' },
   { value: 'ja', label: '日本語' },
+  { value: 'ja-h', label: '日本語漢字' },
   { value: 'en', label: 'English' },
   { value: 'fr', label: 'Français' },
   { value: 'ru', label: 'Русский' },
