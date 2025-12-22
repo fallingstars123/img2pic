@@ -42,6 +42,30 @@ const linksList: EssentialLinkProps[] = [
     link: '/pixel-art',
   },
   {
+    title: '工具箱',
+    caption: '实用工具集合',
+    icon: 'build',
+    link: 'https://tools.sirrus.cc',
+  },
+  {
+    title: '小说助手',
+    caption: 'AI 小说创作助手',
+    icon: 'auto_stories',
+    link: 'https://anh.sirrus.cc',
+  },
+  {
+    title: '检查单助手',
+    caption: '检查单管理工具',
+    icon: 'checklist',
+    link: 'https://guides.sirrus.cc',
+  },
+  {
+    title: '博客',
+    caption: '技术博客',
+    icon: 'article',
+    link: 'https://blog.sirrus.cc',
+  },
+  {
     title: 'Github',
     caption: 'github.com/AndreaFrederica',
     icon: 'code',
