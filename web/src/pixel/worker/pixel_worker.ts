@@ -1,10 +1,9 @@
 import * as Comlink from "comlink";
 import type { PipelineParams, PipelineResult, RgbaImage } from "../types";
 import { rgbaToGray01, gradEnergy, enhanceEnergyDirectional, toHeatmapU8 } from "../energy";
-import { detectPixelSize, detectGridLines, interpolateLines, completeEdges } from "../grid";
-import { samplePixelArt } from "../sample";
+import { detectPixelSize, detectGridLines, interpolateLines, completeEdges, samplePixelArt } from "../grid";
 
-async function runPipeline(img: RgbaImage, params: PipelineParams): Promise<PipelineResult> {
+function runPipeline(img: RgbaImage, params: PipelineParams): PipelineResult {
   const width = img.width;
   const height = img.height;
 
@@ -51,11 +50,9 @@ async function runPipeline(img: RgbaImage, params: PipelineParams): Promise<Pipe
   if (allX0.length > 1) {
     let sum = 0;
     for (let i = 1; i < allX0.length; i++) {
-      const curr = allX0[i];
-      const prev = allX0[i-1];
-      if (curr !== undefined && prev !== undefined) {
-        sum += curr - prev;
-      }
+      const curr = allX0[i]!;
+      const prev = allX0[i-1]!;
+      sum += curr - prev;
     }
     typicalX = Math.round(sum / (allX0.length - 1));
   }
@@ -64,11 +61,9 @@ async function runPipeline(img: RgbaImage, params: PipelineParams): Promise<Pipe
   if (allY0.length > 1) {
     let sum = 0;
     for (let i = 1; i < allY0.length; i++) {
-      const curr = allY0[i];
-      const prev = allY0[i-1];
-      if (curr !== undefined && prev !== undefined) {
-        sum += curr - prev;
-      }
+      const curr = allY0[i]!;
+      const prev = allY0[i-1]!;
+      sum += curr - prev;
     }
     typicalY = Math.round(sum / (allY0.length - 1));
   }

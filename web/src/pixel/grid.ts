@@ -31,7 +31,7 @@ function detrend1d(x: Float32Array, win: number): Float32Array {
   }
   mean /= x.length;
   for (let i = 0; i < x.length; i++) {
-    out[i] -= mean;
+    out[i]! -= mean;
   }
   return out;
 }
@@ -62,7 +62,7 @@ export function detectPixelSize(energyU8: Uint8Array, width: number, height: num
     const row = y * width;
     for (let x = 0; x < width; x++) {
       const v = energyU8[row + x] || 0;
-      px[x] += v;
+      px[x]! += v;
       rowSum += v;
     }
     py[y] = rowSum;
@@ -173,15 +173,13 @@ export function detectPeaks1d(
   refined.sort((a, b) => a - b);
 
   // spacing filter
-  const filtered: number[] = refined.length > 0 ? [refined[0]] : [];
+  const filtered: number[] = refined.length > 0 ? [refined[0]!] : [];
   for (let i = 1; i < refined.length; i++) {
-    const p = refined[i];
-    const last = filtered[filtered.length - 1];
-    if (last !== undefined) {
-      const spacing = p - last;
-      if (Math.abs(spacing - gapSize) <= gapTolerance || spacing > gapSize + gapTolerance) {
-        filtered.push(p);
-      }
+    const p = refined[i]!;
+    const last = filtered[filtered.length - 1]!;
+    const spacing = p - last;
+    if (Math.abs(spacing - gapSize) <= gapTolerance || spacing > gapSize + gapTolerance) {
+      filtered.push(p);
     }
   }
   return filtered;
@@ -205,7 +203,7 @@ export function detectGridLines(
     let sum = 0;
     for (let x = 0; x < width; x++) {
       const v = energyU8[row + x] || 0;
-      xProf[x] += v;
+      xProf[x]! += v;
       sum += v;
     }
     yProf[y] = sum;
@@ -224,11 +222,9 @@ function medianGap(lines: number[], fallback: number): number {
   if (lines.length < 2) return fallback;
   const gaps: number[] = [];
   for (let i = 0; i < lines.length - 1; i++) {
-    const curr = lines[i];
-    const next = lines[i + 1];
-    if (curr !== undefined && next !== undefined) {
-      gaps.push(next - curr);
-    }
+    const curr = lines[i]!;
+    const next = lines[i + 1]!;
+    gaps.push(next - curr);
   }
   gaps.sort((a, b) => a - b);
   const idx = (gaps.length / 2) | 0;
@@ -252,22 +248,20 @@ export function interpolateLines(lines: number[], limit: number, fallbackGap: nu
 
   // gaps
   for (let i = 0; i < lines.length - 1; i++) {
-    const a = lines[i];
-    const b = lines[i + 1];
-    if (a !== undefined && b !== undefined) {
-      const gap = b - a;
-      if (gap > typical * 1.5) {
-        const numMissing = Math.max(1, Math.round(gap / typical) - 1);
-        for (let k = 1; k <= numMissing; k++) {
-          all.push(a + ((k * gap / (numMissing + 1)) | 0));
-        }
+    const a = lines[i]!;
+    const b = lines[i + 1]!;
+    const gap = b - a;
+    if (gap > typical * 1.5) {
+      const numMissing = Math.max(1, Math.round(gap / typical) - 1);
+      for (let k = 1; k <= numMissing; k++) {
+        all.push(a + ((k * gap / (numMissing + 1)) | 0));
       }
     }
   }
 
   // after
-  const last = lines[lines.length - 1];
-  if (last !== undefined && last < limit - typical) {
+  const last = lines[lines.length - 1]!;
+  if (last < limit - typical) {
     const remain = limit - last;
     const numAfter = Math.max(1, Math.round(remain / typical) - 1);
     for (let k = 1; k <= numAfter; k++) {
@@ -301,8 +295,8 @@ export function completeEdges(
   }
 
   // extend right
-  const lastLine = lines[lines.length - 1];
-  if (lastLine !== undefined && lastLine < limit - 1) {
+  const lastLine = lines[lines.length - 1]!;
+  if (lastLine < limit - 1) {
     let x = lastLine;
     const edge: number[] = [];
     while (x < limit - 1) {
@@ -315,18 +309,14 @@ export function completeEdges(
   // filter by tolerance rule
   const filtered: number[] = [];
   for (let i = 0; i < lines.length; i++) {
-    const line = lines[i];
-    if (line !== undefined) {
-      if (filtered.length === 0) {
+    const line = lines[i]!;
+    if (filtered.length === 0) {
+      filtered.push(line);
+    } else {
+      const last = filtered[filtered.length - 1]!;
+      const spacing = line - last;
+      if (Math.abs(spacing - typicalGap) <= gapTolerance || spacing > typicalGap + gapTolerance) {
         filtered.push(line);
-      } else {
-        const last = filtered[filtered.length - 1];
-        if (last !== undefined) {
-          const spacing = line - last;
-          if (Math.abs(spacing - typicalGap) <= gapTolerance || spacing > typicalGap + gapTolerance) {
-            filtered.push(line);
-          }
-        }
       }
     }
   }
@@ -334,7 +324,7 @@ export function completeEdges(
   // ensure edges
   const out = Array.from(new Set(filtered)).sort((a, b) => a - b);
   if (out[0] !== 0) out.unshift(0);
-  if (out[out.length - 1] !== limit - 1) out.push(limit - 1);
+  if (out[out.length - 1]! !== limit - 1) out.push(limit - 1);
   return out;
 }
 
@@ -362,15 +352,13 @@ export function samplePixelArt(
   }
 
   for (let i = 0; i < cellW; i++) {
-    const x1 = allX[i];
-    const x2 = allX[i + 1];
-    if (x1 === undefined || x2 === undefined) continue;
+    const x1 = allX[i]!;
+    const x2 = allX[i + 1]!;
     const cx = ((x1 + x2) / 2) | 0;
 
     for (let j = 0; j < cellH; j++) {
-      const y1 = allY[j];
-      const y2 = allY[j + 1];
-      if (y1 === undefined || y2 === undefined) continue;
+      const y1 = allY[j]!;
+      const y2 = allY[j + 1]!;
       const cy = ((y1 + y2) / 2) | 0;
 
       let r = 0, g = 0, b = 0;

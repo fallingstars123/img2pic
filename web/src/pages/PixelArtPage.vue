@@ -36,11 +36,7 @@
                   label
                   label-always
                   class="q-mb-md"
-                >
-                  <template v-slot:label>
-                    高斯模糊 Sigma: {{ params.sigma.toFixed(1) }}
-                  </template>
-                </q-slider>
+                />
 
                 <q-slider
                   v-model="params.gapTolerance"
@@ -49,11 +45,7 @@
                   label
                   label-always
                   class="q-mb-md"
-                >
-                  <template v-slot:label>
-                    网格间隙容差: {{ params.gapTolerance }}px
-                  </template>
-                </q-slider>
+                />
 
                 <q-slider
                   v-model="params.minEnergy"
@@ -63,11 +55,7 @@
                   label
                   label-always
                   class="q-mb-md"
-                >
-                  <template v-slot:label>
-                    最小能量阈值: {{ params.minEnergy.toFixed(2) }}
-                  </template>
-                </q-slider>
+                />
 
                 <q-slider
                   v-model="params.smooth"
@@ -76,11 +64,7 @@
                   label
                   label-always
                   class="q-mb-md"
-                >
-                  <template v-slot:label>
-                    平滑窗口: {{ params.smooth }}
-                  </template>
-                </q-slider>
+                />
 
                 <!-- 能量增强选项 -->
                 <q-toggle
@@ -105,11 +89,7 @@
                       label
                       label-always
                       class="q-mb-md"
-                    >
-                      <template v-slot:label>
-                        水平增强: {{ params.enhanceHorizontal.toFixed(1) }}x
-                      </template>
-                    </q-slider>
+                    />
 
                     <q-slider
                       v-model="params.enhanceVertical"
@@ -119,11 +99,7 @@
                       label
                       label-always
                       class="q-mb-md"
-                    >
-                      <template v-slot:label>
-                        垂直增强: {{ params.enhanceVertical.toFixed(1) }}x
-                      </template>
-                    </q-slider>
+                    />
                   </template>
                 </template>
 
@@ -135,11 +111,7 @@
                   label
                   label-always
                   class="q-mb-md"
-                >
-                  <template v-slot:label>
-                    像素大小: {{ params.pixelSize === 0 ? '自动检测' : params.pixelSize + 'px' }}
-                  </template>
-                </q-slider>
+                />
 
                 <template v-if="params.pixelSize === 0">
                   <q-slider
@@ -149,11 +121,7 @@
                     label
                     label-always
                     class="q-mb-md"
-                  >
-                    <template v-slot:label>
-                      最小像素: {{ params.minS }}px
-                    </template>
-                  </q-slider>
+                  />
 
                   <q-slider
                     v-model="params.maxS"
@@ -162,11 +130,7 @@
                     label
                     label-always
                     class="q-mb-md"
-                  >
-                    <template v-slot:label>
-                      最大像素: {{ params.maxS }}px
-                    </template>
-                  </q-slider>
+                  />
                 </template>
 
                 <!-- 采样参数 -->
@@ -200,11 +164,7 @@
                       label
                       label-always
                       class="q-mb-md"
-                    >
-                      <template v-slot:label>
-                        放大倍数: {{ params.upscale === 0 ? '自动' : params.upscale + 'x' }}
-                      </template>
-                    </q-slider>
+                    />
                   </template>
 
                   <template v-if="params.sampleMode === 'weighted'">
@@ -216,11 +176,7 @@
                       label
                       label-always
                       class="q-mb-md"
-                    >
-                      <template v-slot:label>
-                        权重比例: {{ params.sampleWeightRatio.toFixed(1) }}
-                      </template>
-                    </q-slider>
+                    />
                   </template>
                 </template>
               </q-card>
@@ -336,7 +292,7 @@ const pixelCanvas = ref<HTMLCanvasElement | null>(null);
 const processing = ref(false);
 const showDebug = ref(false);
 const result = ref<PipelineResult | null>(null);
-let workerInstance: any = null;
+let workerInstance: ReturnType<typeof createPixelWorker> | null = null;
 
 // 能量算法参数
 const params = reactive<PipelineParams>({
@@ -367,7 +323,7 @@ const sampleModeOptions = [
 ];
 
 // 初始化Worker
-onMounted(async () => {
+onMounted(() => {
   workerInstance = createPixelWorker();
 });
 
@@ -378,7 +334,7 @@ onUnmounted(() => {
 });
 
 // 文件选择处理
-async function onFileSelected(file: File) {
+function onFileSelected(file: File) {
   if (!file || !originalImage.value) return;
 
   const img = new Image();
@@ -416,7 +372,7 @@ async function processImage() {
     };
 
     // 调用Worker处理
-    const resultData = await workerInstance.api.runPipeline(input, params);
+    const resultData = await workerInstance!.api.runPipeline(input, params);
 
     // 保存结果
     result.value = resultData;
@@ -439,7 +395,7 @@ async function processImage() {
     console.error('处理错误:', error);
     $q.notify({
       type: 'negative',
-      message: '处理失败：' + error,
+      message: '处理失败：' + String(error),
     });
   } finally {
     processing.value = false;
@@ -462,7 +418,7 @@ function renderDebugImage() {
   const imageData = ctx.createImageData(width, height);
 
   for (let i = 0; i < energyData.length; i++) {
-    const value = energyData[i];
+    const value = energyData[i] || 0;
     const idx = i * 4;
     imageData.data[idx] = value;     // R
     imageData.data[idx + 1] = value; // G
@@ -515,9 +471,9 @@ function renderDebugImage() {
   // 绘制网格中心点（绿色）
   ctx.fillStyle = 'green';
   for (let i = 0; i < allXLines.length - 1; i++) {
-    const x = (allXLines[i] + allXLines[i + 1]) / 2;
+    const x = (allXLines[i]! + allXLines[i + 1]!) / 2;
     for (let j = 0; j < allYLines.length - 1; j++) {
-      const y = (allYLines[j] + allYLines[j + 1]) / 2;
+      const y = (allYLines[j]! + allYLines[j + 1]!) / 2;
       ctx.fillRect(x - 1, y - 1, 2, 2);
     }
   }
@@ -541,9 +497,9 @@ function renderPixelArt() {
   for (let i = 0; i < rgbData.length / 3; i++) {
     const idx = i * 4;
     const rgbIdx = i * 3;
-    imageData.data[idx] = rgbData[rgbIdx];         // R
-    imageData.data[idx + 1] = rgbData[rgbIdx + 1]; // G
-    imageData.data[idx + 2] = rgbData[rgbIdx + 2]; // B
+    imageData.data[idx] = rgbData[rgbIdx] || 0;         // R
+    imageData.data[idx + 1] = rgbData[rgbIdx + 1] || 0; // G
+    imageData.data[idx + 2] = rgbData[rgbIdx + 2] || 0; // B
     imageData.data[idx + 3] = 255;                  // A
   }
 

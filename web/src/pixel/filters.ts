@@ -12,7 +12,7 @@ export function gaussianKernel1d(sigma: number): Float32Array {
     k[i + radius] = v;
     sum += v;
   }
-  for (let i = 0; i < size; i++) k[i] /= sum;
+  for (let i = 0; i < size; i++) k[i]! /= sum;
   return k;
 }
 
@@ -33,7 +33,7 @@ export function convolveSeparable(
       let acc = 0;
       for (let t = -radius; t <= radius; t++) {
         const xx = reflect101(x + t, width);
-        acc += src[row + xx] * k[t + radius];
+        acc += (src[row + xx] || 0) * (k[t + radius] || 0);
       }
       tmp[row + x] = acc;
     }
@@ -45,7 +45,7 @@ export function convolveSeparable(
       let acc = 0;
       for (let t = -radius; t <= radius; t++) {
         const yy = reflect101(y + t, height);
-        acc += tmp[yy * width + x] * k[t + radius];
+        acc += (tmp[yy * width + x] || 0) * (k[t + radius] || 0);
       }
       dst[y * width + x] = acc;
     }
