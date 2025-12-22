@@ -113,6 +113,7 @@ export default {
     detectedGridLines: 'Detected Grid Lines',
     outputSize: 'Output Size',
     upscaleFactor: 'Upscale Factor',
+    renderTime: 'Render Time',
     processingComplete: 'Processing Complete!',
     processingFailed: 'Processing Failed: '
   },

@@ -193,6 +193,7 @@ export default {
     detectedGridLines: '検出格子線',
     outputSize: '出力寸法',
     upscaleFactor: '拡大倍率',
+    renderTime: '描畫時間',
     processingComplete: '処理完了！',
     processingFailed: '処理失敗：'
   },

@@ -391,6 +391,14 @@
                 <div>{{ $t('status.outputSize') }}: {{ result.pixelArt.width }} × {{ result.pixelArt.height }}</div>
                 <div>{{ $t('status.upscaleFactor') }}: {{ result.pixelArt.upscaleFactor }}x</div>
               </div>
+              <!-- 渲染用时 -->
+              <div v-if="renderTimings.total > 0" class="q-mt-md">
+                <div class="text-subtitle2 q-mb-xs">{{ $t('status.renderTime') }}</div>
+                <div class="q-mb-xs">总耗时: {{ renderTimings.total.toFixed(2) }}ms</div>
+                <div v-if="renderTimings.energy" class="q-mb-xs">能量图: {{ renderTimings.energy.toFixed(2) }}ms</div>
+                <div v-if="renderTimings.debug" class="q-mb-xs">调试图: {{ renderTimings.debug.toFixed(2) }}ms</div>
+                <div v-if="renderTimings.pixelArt" class="q-mb-xs">像素画: {{ renderTimings.pixelArt.toFixed(2) }}ms</div>
+              </div>
             </div>
           </q-card-section>
         </q-card>
@@ -454,13 +462,14 @@
                     @click="openImagePreview(null, $t('title.pixelatedResult'))"
                   />
                   <canvas ref="pixelCanvas" class="pixel-canvas" v-show="false" />
-                  <div class="q-mt-md">
+                  <!-- 下载按钮组 -->
+                  <div class="download-buttons">
                     <q-btn
                       color="secondary"
                       :label="$t('actions.downloadPureEnergyMap')"
                       @click="downloadEnergy"
                       icon="download"
-                      class="q-mr-md"
+                      class="download-btn"
                       v-if="showDebug"
                     />
                     <q-btn
@@ -468,7 +477,7 @@
                       :label="$t('actions.downloadEnergyMapWithGrid')"
                       @click="downloadDebug"
                       icon="download"
-                      class="q-mr-md"
+                      class="download-btn"
                       v-if="showDebug"
                     />
                     <q-btn
@@ -476,6 +485,7 @@
                       :label="$t('actions.downloadPixelArt')"
                       @click="downloadPixelArt"
                       icon="download"
+                      class="download-btn"
                     />
                   </div>
                 </div>
@@ -542,6 +552,21 @@ let workerInstance: ReturnType<typeof createPixelWorker> | null = null;
 const imagePreviewDialog = ref(false);
 const previewImageSrc = ref('');
 const previewImageName = ref('');
+
+// 原始图片的高清数据 URL（用于预览）
+const originalImageDataUrl = ref('');
+
+// 能量图和调试图的数据 URL（用于预览）
+const energyImageDataUrl = ref('');
+const debugImageDataUrl = ref('');
+
+// 渲染用时
+const renderTimings = ref<{
+  total: number;
+  energy?: number;
+  debug?: number;
+  pixelArt?: number;
+}>({ total: 0 });
 
 // 直接采样模式开关
 const useDirectSampling = ref(false);
@@ -702,8 +727,16 @@ watch(selectedFile, async (file) => {
   if (!file) {
     console.log('Early return: no file');
     imageLoaded.value = false;
+    originalImageDataUrl.value = '';
     return;
   }
+
+  // 保存原始图片的高清 data URL 用于预览
+  originalImageDataUrl.value = URL.createObjectURL(file);
+
+  // 清空旧的能量图和调试图 data URL
+  energyImageDataUrl.value = '';
+  debugImageDataUrl.value = '';
 
   // 先标记为已加载，这样canvas会被渲染
   imageLoaded.value = true;
@@ -749,6 +782,10 @@ async function processImage() {
 
   processing.value = true;
   console.log('Processing started');
+
+  // 重置渲染用时
+  renderTimings.value = { total: 0 };
+  const totalStartTime = performance.now();
 
   try {
     // 获取图片数据
@@ -827,6 +864,10 @@ async function processImage() {
       }
     }
 
+    const totalElapsed = performance.now() - totalStartTime;
+    renderTimings.value.total = totalElapsed;
+    console.log(`总渲染用时: ${totalElapsed.toFixed(2)}ms`);
+
     $q.notify({
       type: 'positive',
       message: t('status.processingComplete'),
@@ -846,6 +887,7 @@ async function processImage() {
 function renderEnergyImage() {
   if (!result.value || !energyCanvas.value) return;
 
+  const startTime = performance.now();
   const { width, height, energyU8 } = result.value;
 
   energyCanvas.value.width = width;
@@ -869,12 +911,20 @@ function renderEnergyImage() {
 
   ctx.putImageData(imageData, 0, 0);
   console.log('Pure energy image rendering completed');
+
+  // 保存高清 data URL 用于预览
+  energyImageDataUrl.value = energyCanvas.value.toDataURL('image/png', 1.0);
+
+  const elapsed = performance.now() - startTime;
+  renderTimings.value.energy = elapsed;
+  console.log(`纯能量图渲染用时: ${elapsed.toFixed(2)}ms`);
 }
 
 // 渲染调试图像（能量图+网格线）
 function renderDebugImage() {
   if (!result.value || !debugCanvas.value) return;
 
+  const startTime = performance.now();
   const { width, height, energyU8, xLines, yLines, allXLines, allYLines } = result.value;
 
   debugCanvas.value.width = width;
@@ -960,12 +1010,20 @@ function renderDebugImage() {
     }
   }
   console.log('Debug image rendering completed', { centerPointCount });
+
+  // 保存高清 data URL 用于预览
+  debugImageDataUrl.value = debugCanvas.value.toDataURL('image/png', 1.0);
+
+  const elapsed = performance.now() - startTime;
+  renderTimings.value.debug = elapsed;
+  console.log(`调试图渲染用时: ${elapsed.toFixed(2)}ms`);
 }
 
 // 渲染像素画
 function renderPixelArt() {
   if (!result.value?.pixelArt) return;
 
+  const startTime = performance.now();
   const { width, height, rgb, rgba } = result.value.pixelArt;
 
   // 如果有 RGBA 数据，直接生成 data URL
@@ -1032,6 +1090,10 @@ function renderPixelArt() {
     ctx.putImageData(imageData, 0, 0);
     ctx.imageSmoothingEnabled = false;
   }
+
+  const elapsed = performance.now() - startTime;
+  renderTimings.value.pixelArt = elapsed;
+  console.log(`像素画渲染用时: ${elapsed.toFixed(2)}ms`);
 }
 
 // 下载纯能量图
@@ -1195,17 +1257,29 @@ function createPngDataUrl(width: number, height: number, rgbaData: Uint8Array): 
 
 // 打开图片预览器
 function openImagePreview(canvas: HTMLCanvasElement | null, imageName: string) {
-  // 如果是像素画预览，使用已生成的 data URL
+  // 根据图片类型选择对应的 data URL
   if (imageName === t('title.pixelatedResult') && pixelArtDataUrl.value) {
-    previewImageName.value = imageName;
+    // 像素画预览，使用已生成的 data URL
     previewImageSrc.value = pixelArtDataUrl.value;
-    imagePreviewDialog.value = true;
+  } else if (imageName === t('title.originalImage') && originalImageDataUrl.value) {
+    // 原始图片预览，使用保存的高清 data URL（来自原始文件）
+    previewImageSrc.value = originalImageDataUrl.value;
+  } else if (imageName === t('title.pureEnergyMap') && energyImageDataUrl.value) {
+    // 纯能量图预览，使用保存的高清 data URL
+    previewImageSrc.value = energyImageDataUrl.value;
+  } else if (imageName === t('title.energyMapWithGrid') && debugImageDataUrl.value) {
+    // 能量图+网格线预览，使用保存的高清 data URL
+    previewImageSrc.value = debugImageDataUrl.value;
   } else if (canvas) {
-    // 其他情况使用 canvas
-    previewImageName.value = imageName;
-    previewImageSrc.value = canvas.toDataURL();
-    imagePreviewDialog.value = true;
+    // 回退：使用 canvas.toDataURL() 并指定最高质量
+    previewImageSrc.value = canvas.toDataURL('image/png', 1.0);
+  } else {
+    // 没有可用的图片源
+    return;
   }
+
+  previewImageName.value = imageName;
+  imagePreviewDialog.value = true;
 }
 </script>
 
@@ -1278,9 +1352,28 @@ function openImagePreview(canvas: HTMLCanvasElement | null, imageName: string) {
   image-rendering: crisp-edges !important;
 }
 
-/* 图片画布样式 - 用于原始图片、能量图等（保留默认缩放） */
+/* 图片画布样式 - 用于原始图片、能量图等 */
 .image-canvas {
-  /* 使用浏览器默认图像渲染，保持抗锯齿效果 */
+  /* 使用像素化渲染保持清晰度 */
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  max-width: 100%;
+  height: auto;
+}
+
+/* 下载按钮组样式 */
+.download-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.download-btn {
+  min-width: 120px;
+  flex: 1 1 auto;
 }
 
 /* 响应式：小屏幕时切换为垂直布局 */
@@ -1297,6 +1390,14 @@ function openImagePreview(canvas: HTMLCanvasElement | null, imageName: string) {
 
   .image-grid {
     flex-direction: column;
+  }
+
+  .download-buttons {
+    flex-direction: column;
+  }
+
+  .download-btn {
+    width: 100%;
   }
 }
 </style>

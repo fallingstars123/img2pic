@@ -169,6 +169,7 @@ export default {
     detectedGridLines: '検出されたグリッド線',
     outputSize: '出力サイズ',
     upscaleFactor: '拡大倍率',
+    renderTime: 'レンダリング時間',
     processingComplete: '処理完了！',
     processingFailed: '処理失敗：'
   },

@@ -113,6 +113,7 @@ export default {
     detectedGridLines: '감지된 그리드 라인',
     outputSize: '출력 크기',
     upscaleFactor: '업스케일 계수',
+    renderTime: '렌더링 시간',
     processingComplete: '처리 완료!',
     processingFailed: '처리 실패: '
   },

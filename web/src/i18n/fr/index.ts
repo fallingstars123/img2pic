@@ -169,6 +169,7 @@ export default {
     detectedGridLines: 'Lignes de grille détectées',
     outputSize: 'Taille de sortie',
     upscaleFactor: 'Facteur d\'agrandissement',
+    renderTime: 'Temps de rendu',
     processingComplete: 'Traitement terminé !',
     processingFailed: 'Échec du traitement : '
   },

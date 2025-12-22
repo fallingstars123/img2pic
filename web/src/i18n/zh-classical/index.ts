@@ -169,6 +169,7 @@ export default {
     detectedGridLines: '檢測到之網格線',
     outputSize: '輸出大小',
     upscaleFactor: '放大倍數',
+    renderTime: '渲染用時',
     processingComplete: '處理完成！',
     processingFailed: '處理失敗：'
   },

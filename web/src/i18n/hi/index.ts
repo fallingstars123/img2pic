@@ -113,6 +113,7 @@ export default {
     detectedGridLines: 'डिटेक्टेड ग्रिड लाइनें',
     outputSize: 'आउटपुट साइज़',
     upscaleFactor: 'अपस्केल फैक्टर',
+    renderTime: 'रेंडरिंग समय',
     processingComplete: 'प्रसंस्करण पूर्ण!',
     processingFailed: 'प्रसंस्करण विफल: '
   },

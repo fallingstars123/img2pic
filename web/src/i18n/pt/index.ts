@@ -113,6 +113,7 @@ export default {
     detectedGridLines: 'Linhas de Grade Detectadas',
     outputSize: 'Tamanho de Saída',
     upscaleFactor: 'Fator de Ampliação',
+    renderTime: 'Tempo de Renderização',
     processingComplete: 'Processamento Concluído!',
     processingFailed: 'Processamento Falhou: '
   },

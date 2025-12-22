@@ -113,6 +113,7 @@ export default {
     detectedGridLines: 'Líneas de Cuadrícula Detectadas',
     outputSize: 'Tamaño de Salida',
     upscaleFactor: 'Factor de Escalado',
+    renderTime: 'Tiempo de Renderizado',
     processingComplete: '¡Procesamiento Completo!',
     processingFailed: 'Procesamiento Fallido: '
   },

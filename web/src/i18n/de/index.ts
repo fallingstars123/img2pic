@@ -113,6 +113,7 @@ export default {
     detectedGridLines: 'Erkannte Gitterlinien',
     outputSize: 'Ausgabegröße',
     upscaleFactor: 'Skalierungsfaktor',
+    renderTime: 'Renderzeit',
     processingComplete: 'Verarbeitung abgeschlossen!',
     processingFailed: 'Verarbeitung fehlgeschlagen: '
   },

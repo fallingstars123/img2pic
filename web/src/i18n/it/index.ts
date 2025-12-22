@@ -113,6 +113,7 @@ export default {
     detectedGridLines: 'Linee Griglia Rilevate',
     outputSize: 'Dimensione Output',
     upscaleFactor: 'Fattore Scalatura',
+    renderTime: 'Tempo di Rendering',
     processingComplete: 'Elaborazione Completata!',
     processingFailed: 'Elaborazione Fallita: '
   },

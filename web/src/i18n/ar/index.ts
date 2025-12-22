@@ -113,6 +113,7 @@ export default {
     detectedGridLines: 'خطوط الشبكة المكتشفة',
     outputSize: 'حجم الإخراج',
     upscaleFactor: 'عامل التحجيم',
+    renderTime: 'وقت العرض',
     processingComplete: 'اكتملت المعالجة!',
     processingFailed: 'فشلت المعالجة: '
   },

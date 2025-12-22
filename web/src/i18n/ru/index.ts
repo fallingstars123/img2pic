@@ -169,6 +169,7 @@ export default {
     detectedGridLines: 'Обнаруженные линии сетки',
     outputSize: 'Размер вывода',
     upscaleFactor: 'Коэффициент увеличения',
+    renderTime: 'Время рендеринга',
     processingComplete: 'Обработка завершена!',
     processingFailed: 'Ошибка обработки: '
   },
