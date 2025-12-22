@@ -39,3 +39,9 @@ yarn-error.log*
 *.wasm
 !/wasm/pkg/*.wasm
 *.rs.bk
+
+# Explicitly include WASM build artifacts in wasm/pkg
+!/wasm/pkg/
+!/wasm/pkg/*.js
+!/wasm/pkg/*.d.ts
+!/wasm/pkg/package.json
