@@ -73,7 +73,7 @@ async function handleAssetRequest(request, pathname) {
 
   try {
     // Map request to asset and serve from KV
-    const asset = await getAssetFromKV(event, {
+    const asset = await getAssetFromKV(request, {
       mapRequestToAsset: req => {
         // First try to get the exact path
         return mapRequestToAsset(req);
@@ -106,7 +106,7 @@ async function handleAssetRequest(request, pathname) {
     // If asset not found, return 404 or fallback to index.html for SPA
     if (e.status === 404 && shouldServeIndex(pathname)) {
       try {
-        const indexAsset = await getAssetFromKV(event, {
+        const indexAsset = await getAssetFromKV(request, {
           mapRequestToAsset: req => {
             const url = new URL(req.url);
             url.pathname = '/index.html';

@@ -1,8 +1,8 @@
 name = "img2pic-web"
-main = "workers-site/index.js"
+main = "web/workers-site/index.js"
 compatibility_date = "2024-01-01"
 compatibility_flags = ["nodejs_compat"]
-build = { command = "npm run build:cf && cd workers-site && npm install", cwd = "." }
+build = { command = "cd web && npm run build:cf && cd workers-site && npm install", cwd = "." }
 
 [env.production]
 name = "img2pic-web-prod"
@@ -18,7 +18,7 @@ routes = [
 
 # Assets configuration for serving static files
 [site]
-bucket = "./dist/spa"
+bucket = "./web/dist/spa"
 
 # Environment variables
 [vars]
