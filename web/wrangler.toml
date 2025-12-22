@@ -1,5 +1,5 @@
 # wrangler.toml
-name = 'image2pic'
+name = 'img2pic'
 main = "workers/worker.js"
 compatibility_date = "2025-11-12"
 workers_dev = false
