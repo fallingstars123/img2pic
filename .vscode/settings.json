@@ -7,7 +7,9 @@
         "detrend",
         "energ",
         "FASTOCTREE",
+        "Français",
         "fromarray",
+        "Génération",
         "interp",
         "keepdims",
         "kmeans",
@@ -27,6 +29,7 @@
         "scipy",
         "sirrus",
         "sobel",
-        "upng"
+        "upng",
+        "Русский"
     ]
 }

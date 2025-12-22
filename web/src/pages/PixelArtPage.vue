@@ -6,12 +6,12 @@
       <div class="control-panel">
         <q-card>
           <q-card-section>
-            <div class="text-h6 q-mb-md">像素化设置</div>
+            <div class="text-h6 q-mb-md">{{ $t('title.pixelSettings') }}</div>
 
             <!-- 文件上传 -->
             <q-file
               v-model="selectedFile"
-              label="选择图片"
+              :label="$t('fileUpload.selectImage')"
               accept="image/*"
               class="q-mb-md"
             >
@@ -22,18 +22,18 @@
 
             <!-- 像素化参数 -->
             <q-expansion-item
-              label="像素化参数"
+              :label="$t('pixelParams.title')"
               default-opened
               class="q-mb-md"
             >
               <q-card flat bordered class="q-pa-md">
                 <!-- 能量算法参数（仅在非直接采样模式时显示） -->
                 <template v-if="!useDirectSampling">
-                  <div class="text-subtitle2 q-mb-md">能量算法参数</div>
+                  <div class="text-subtitle2 q-mb-md">{{ $t('pixelParams.energyAlgorithmParams') }}</div>
 
                   <!-- 基础参数 -->
                   <div class="q-mb-md">
-                    <div class="text-body2 q-mb-sm">高斯模糊 (σ): {{ params.sigma.toFixed(1) }}</div>
+                    <div class="text-body2 q-mb-sm">{{ $t('pixelParams.gaussianBlur') }}: {{ params.sigma.toFixed(1) }}</div>
                     <q-slider
                       v-model="params.sigma"
                       :min="0"
@@ -46,7 +46,7 @@
                   </div>
 
                 <div class="q-mb-md">
-                  <div class="text-body2 q-mb-sm">间隙容忍度: {{ params.gapTolerance }}</div>
+                  <div class="text-body2 q-mb-sm">{{ $t('pixelParams.gapTolerance') }}: {{ params.gapTolerance }}</div>
                   <q-slider
                     v-model="params.gapTolerance"
                     :min="0"
@@ -58,7 +58,7 @@
                 </div>
 
                 <div class="q-mb-md">
-                  <div class="text-body2 q-mb-sm">最小能量阈值: {{ params.minEnergy.toFixed(2) }}</div>
+                  <div class="text-body2 q-mb-sm">{{ $t('pixelParams.minEnergyThreshold') }}: {{ params.minEnergy.toFixed(2) }}</div>
                   <q-slider
                     v-model="params.minEnergy"
                     :min="0"
@@ -71,7 +71,7 @@
                 </div>
 
                 <div class="q-mb-md">
-                  <div class="text-body2 q-mb-sm">平滑窗口大小: {{ params.smooth }}</div>
+                  <div class="text-body2 q-mb-sm">{{ $t('pixelParams.smoothWindowSize') }}: {{ params.smooth }}</div>
                   <q-slider
                     v-model="params.smooth"
                     :min="1"
@@ -85,20 +85,20 @@
                 <!-- 能量增强选项 -->
                 <q-toggle
                   v-model="params.enhanceEnergy"
-                  label="启用能量增强"
+                  :label="$t('pixelParams.enableEnergyEnhancement')"
                   class="q-mb-md"
                 />
 
                 <template v-if="params.enhanceEnergy">
                   <q-toggle
                     v-model="params.enhanceDirectional"
-                    label="方向性增强"
+                    :label="$t('pixelParams.directionalEnhancement')"
                     class="q-mb-md"
                   />
 
                   <template v-if="params.enhanceDirectional">
                     <div class="q-mb-md">
-                      <div class="text-body2 q-mb-sm">水平增强倍数: {{ params.enhanceHorizontal.toFixed(1) }}</div>
+                      <div class="text-body2 q-mb-sm">{{ $t('pixelParams.horizontalEnhancement') }}: {{ params.enhanceHorizontal.toFixed(1) }}</div>
                       <q-slider
                         v-model="params.enhanceHorizontal"
                         :min="0.5"
@@ -111,7 +111,7 @@
                     </div>
 
                     <div class="q-mb-md">
-                      <div class="text-body2 q-mb-sm">垂直增强倍数: {{ params.enhanceVertical.toFixed(1) }}</div>
+                      <div class="text-body2 q-mb-sm">{{ $t('pixelParams.verticalEnhancement') }}: {{ params.enhanceVertical.toFixed(1) }}</div>
                       <q-slider
                         v-model="params.enhanceVertical"
                         :min="0.5"
@@ -129,9 +129,9 @@
                 <!-- 像素大小检测 -->
                 <div class="q-mb-md">
                   <div class="text-body2 q-mb-sm">
-                    像素大小:
-                    <span v-if="useDirectSampling">{{ params.pixelSize || 8 }}px (手动设置)</span>
-                    <span v-else>{{ params.pixelSize === 0 ? '自动检测' : params.pixelSize + 'px' }}</span>
+                    {{ $t('pixelParams.pixelSize') }}:
+                    <span v-if="useDirectSampling">{{ params.pixelSize || 8 }}px ({{ $t('pixelParams.manualSet') }})</span>
+                    <span v-else>{{ params.pixelSize === 0 ? $t('pixelParams.autoDetect') : params.pixelSize + 'px' }}</span>
                   </div>
                   <q-slider
                     v-model="params.pixelSize"
@@ -145,7 +145,7 @@
 
                 <template v-if="!useDirectSampling && params.pixelSize === 0">
                   <div class="q-mb-md">
-                    <div class="text-body2 q-mb-sm">最小像素大小: {{ params.minS }}</div>
+                    <div class="text-body2 q-mb-sm">{{ $t('pixelParams.minPixelSize') }}: {{ params.minS }}</div>
                     <q-slider
                       v-model="params.minS"
                       :min="2"
@@ -157,7 +157,7 @@
                   </div>
 
                   <div class="q-mb-md">
-                    <div class="text-body2 q-mb-sm">最大像素大小: {{ params.maxS }}</div>
+                    <div class="text-body2 q-mb-sm">{{ $t('pixelParams.maxPixelSize') }}: {{ params.maxS }}</div>
                     <q-slider
                       v-model="params.maxS"
                       :min="10"
@@ -170,18 +170,18 @@
                 </template>
 
                 <!-- 采样模式选择 -->
-                <div class="text-subtitle2 q-mb-md">采样模式</div>
+                <div class="text-subtitle2 q-mb-md">{{ $t('samplingMode.title') }}</div>
 
                 <q-toggle
                   v-model="params.sample"
-                  label="生成像素画"
+                  :label="$t('samplingMode.generatePixelArt')"
                   class="q-mb-md"
                 />
 
                 <template v-if="params.sample">
                   <q-toggle
                     v-model="useDirectSampling"
-                    label="直接按比例采样（适用于普通图片）"
+                    :label="$t('samplingMode.directProportionalSampling')"
                     class="q-mb-md"
                   />
 
@@ -189,7 +189,7 @@
                     <q-select
                       v-model="params.sampleMode"
                       :options="sampleModeOptions.filter(opt => opt.value !== 'direct')"
-                      label="能量图采样模式"
+                      :label="$t('samplingMode.energyMapSampling')"
                       emit-value
                       map-options
                       class="q-mb-md"
@@ -198,13 +198,13 @@
 
                   <q-toggle
                     v-model="params.nativeRes"
-                    label="原生分辨率 (1像素=1格)"
+                    :label="$t('samplingMode.nativeResolution')"
                     class="q-mb-md"
                   />
 
                   <template v-if="!params.nativeRes">
                     <div class="q-mb-md">
-                      <div class="text-body2 q-mb-sm">放大倍数: {{ params.upscale === 0 ? '自动' : params.upscale }}</div>
+                      <div class="text-body2 q-mb-sm">{{ $t('samplingMode.upscaleFactor') }}: {{ params.upscale === 0 ? $t('samplingMode.auto') : params.upscale }}</div>
                       <q-slider
                         v-model="params.upscale"
                         :min="0"
@@ -218,7 +218,7 @@
 
                   <template v-if="!useDirectSampling && params.sampleMode === 'weighted'">
                     <div class="q-mb-md">
-                      <div class="text-body2 q-mb-sm">加权比例: {{ params.sampleWeightRatio.toFixed(1) }}</div>
+                      <div class="text-body2 q-mb-sm">{{ $t('samplingMode.weightedRatio') }}: {{ params.sampleWeightRatio.toFixed(1) }}</div>
                       <q-slider
                         v-model="params.sampleWeightRatio"
                         :min="0.1"
@@ -233,13 +233,13 @@
 
                   <template v-if="useDirectSampling">
                     <q-separator class="q-my-md" />
-                    <div class="text-subtitle2 q-mb-md">直接采样参数</div>
+                    <div class="text-subtitle2 q-mb-md">{{ $t('samplingMode.directSamplingParams') }}</div>
 
                     <q-banner class="bg-grey-2 text-grey-8 q-mb-md">
                       <template v-slot:avatar>
                         <q-icon name="info" />
                       </template>
-                      直接采样模式适用于普通图片转换为像素画。需要手动设置像素大小。
+                      {{ $t('samplingMode.directSamplingDescription') }}
                     </q-banner>
                   </template>
                 </template>
@@ -249,7 +249,7 @@
             <!-- 处理按钮 -->
             <q-btn
               color="primary"
-              label="开始处理"
+              :label="$t('actions.startProcessing')"
               @click="processImage"
               :loading="processing"
               :disable="!selectedFile || processing"
@@ -259,17 +259,17 @@
             <!-- 显示调试信息 -->
             <q-toggle
               v-model="showDebug"
-              label="显示能量图和网格线"
+              :label="$t('actions.showEnergyMapAndGrid')"
               class="q-mb-md"
             />
 
             <!-- 状态信息 -->
             <div v-if="result" class="text-body2 text-grey-7">
-              <div class="q-mb-sm">检测到像素大小: {{ result.detectedPixelSize }}px</div>
-              <div class="q-mb-sm">检测到网格线: {{ result.xLines.length }} × {{ result.yLines.length }}</div>
+              <div class="q-mb-sm">{{ $t('status.detectedPixelSize') }}: {{ result.detectedPixelSize }}px</div>
+              <div class="q-mb-sm">{{ $t('status.detectedGridLines') }}: {{ result.xLines.length }} × {{ result.yLines.length }}</div>
               <div v-if="result.pixelArt">
-                <div>输出尺寸: {{ result.pixelArt.width }} × {{ result.pixelArt.height }}</div>
-                <div>放大倍数: {{ result.pixelArt.upscaleFactor }}x</div>
+                <div>{{ $t('status.outputSize') }}: {{ result.pixelArt.width }} × {{ result.pixelArt.height }}</div>
+                <div>{{ $t('status.upscaleFactor') }}: {{ result.pixelArt.upscaleFactor }}x</div>
               </div>
             </div>
           </q-card-section>
@@ -284,12 +284,12 @@
           <div class="image-card">
             <q-card>
               <q-card-section>
-                <div class="text-h6 q-mb-md">原始图片</div>
+                <div class="text-h6 q-mb-md">{{ $t('title.originalImage') }}</div>
                 <div v-if="imageLoaded" class="text-center">
-                  <canvas ref="originalCanvas" class="image-canvas" style="max-width: 100%; height: auto; cursor: pointer;" @click="openImagePreview(originalCanvas, '原始图片')" />
+                  <canvas ref="originalCanvas" class="image-canvas" style="max-width: 100%; height: auto; cursor: pointer;" @click="openImagePreview(originalCanvas, $t('title.originalImage'))" />
                 </div>
                 <div v-else class="text-center text-grey-6 q-pa-lg">
-                  请选择要处理的图片
+                  {{ $t('fileUpload.selectImageHint') }}
                 </div>
               </q-card-section>
             </q-card>
@@ -299,9 +299,9 @@
           <div v-if="showDebug && result" class="image-card">
             <q-card>
               <q-card-section>
-                <div class="text-h6 q-mb-md">纯能量图</div>
+                <div class="text-h6 q-mb-md">{{ $t('title.pureEnergyMap') }}</div>
                 <div class="text-center">
-                  <canvas ref="energyCanvas" class="image-canvas" style="max-width: 100%; height: auto; cursor: pointer;" @click="openImagePreview(energyCanvas, '纯能量图')" />
+                  <canvas ref="energyCanvas" class="image-canvas" style="max-width: 100%; height: auto; cursor: pointer;" @click="openImagePreview(energyCanvas, $t('title.pureEnergyMap'))" />
                 </div>
               </q-card-section>
             </q-card>
@@ -311,9 +311,9 @@
           <div v-if="showDebug && result" class="image-card">
             <q-card>
               <q-card-section>
-                <div class="text-h6 q-mb-md">能量图和网格线</div>
+                <div class="text-h6 q-mb-md">{{ $t('title.energyMapWithGrid') }}</div>
                 <div class="text-center">
-                  <canvas ref="debugCanvas" class="image-canvas" style="max-width: 100%; height: auto; cursor: pointer;" @click="openImagePreview(debugCanvas, '能量图和网格线')" />
+                  <canvas ref="debugCanvas" class="image-canvas" style="max-width: 100%; height: auto; cursor: pointer;" @click="openImagePreview(debugCanvas, $t('title.energyMapWithGrid'))" />
                 </div>
               </q-card-section>
             </q-card>
@@ -323,7 +323,7 @@
           <div v-if="result && result.pixelArt" class="image-card">
             <q-card>
               <q-card-section>
-                <div class="text-h6 q-mb-md">像素化结果</div>
+                <div class="text-h6 q-mb-md">{{ $t('title.pixelatedResult') }}</div>
                 <div class="text-center">
                   <q-img
                     v-if="pixelArtDataUrl"
@@ -331,13 +331,13 @@
                     no-native-menu
                     fit="contain"
                     class="pixel-art-result"
-                    @click="openImagePreview(null, '像素化结果')"
+                    @click="openImagePreview(null, $t('title.pixelatedResult'))"
                   />
                   <canvas ref="pixelCanvas" class="pixel-canvas" v-show="false" />
                   <div class="q-mt-md">
                     <q-btn
                       color="secondary"
-                      label="下载纯能量图"
+                      :label="$t('actions.downloadPureEnergyMap')"
                       @click="downloadEnergy"
                       icon="download"
                       class="q-mr-md"
@@ -345,7 +345,7 @@
                     />
                     <q-btn
                       color="secondary"
-                      label="下载能量图+网格"
+                      :label="$t('actions.downloadEnergyMapWithGrid')"
                       @click="downloadDebug"
                       icon="download"
                       class="q-mr-md"
@@ -353,7 +353,7 @@
                     />
                     <q-btn
                       color="secondary"
-                      label="下载像素画"
+                      :label="$t('actions.downloadPixelArt')"
                       @click="downloadPixelArt"
                       icon="download"
                     />
@@ -388,8 +388,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, onUnmounted, nextTick, watch } from 'vue';
+import { ref, reactive, computed, onMounted, onUnmounted, nextTick, watch } from 'vue';
 import { useQuasar } from 'quasar';
+import { useI18n } from 'vue-i18n';
 import { saveAs } from 'file-saver';
 import UPNG from 'upng-js';
 import { createPixelWorker } from 'src/pixel/workerApi';
@@ -397,6 +398,7 @@ import type { PipelineParams, PipelineResult } from 'src/pixel/types';
 import InlineImageViewer from 'src/components/InlineImageViewer.vue';
 
 const $q = useQuasar();
+const { t } = useI18n();
 
 // 状态变量
 const selectedFile = ref<File | null>(null);
@@ -440,13 +442,13 @@ const params = reactive<PipelineParams>({
   nativeRes: false,
 });
 
-// 采样模式选项
-const sampleModeOptions = [
-  { label: '中心采样', value: 'center' },
-  { label: '平均采样', value: 'average' },
-  { label: '加权平均', value: 'weighted' },
-  { label: '直接按比例采样（普通图片）', value: 'direct' },
-];
+// 采样模式选项（响应式，随语言变化更新）
+const sampleModeOptions = computed(() => [
+  { label: t('samplingMode.centerSampling'), value: 'center' },
+  { label: t('samplingMode.averageSampling'), value: 'average' },
+  { label: t('samplingMode.weightedAverage'), value: 'weighted' },
+  { label: t('samplingMode.directProportionalSampling'), value: 'direct' },
+]);
 
 // 监听直接采样模式切换
 watch(useDirectSampling, (newValue) => {
@@ -598,13 +600,13 @@ async function processImage() {
 
     $q.notify({
       type: 'positive',
-      message: '处理完成！',
+      message: t('status.processingComplete'),
     });
   } catch (error) {
     console.error('处理错误:', error);
     $q.notify({
       type: 'negative',
-      message: '处理失败：' + String(error),
+      message: t('status.processingFailed') + String(error),
     });
   } finally {
     processing.value = false;
@@ -965,7 +967,7 @@ function createPngDataUrl(width: number, height: number, rgbaData: Uint8Array): 
 // 打开图片预览器
 function openImagePreview(canvas: HTMLCanvasElement | null, imageName: string) {
   // 如果是像素画预览，使用已生成的 data URL
-  if (imageName === '像素化结果' && pixelArtDataUrl.value) {
+  if (imageName === t('title.pixelatedResult') && pixelArtDataUrl.value) {
     previewImageName.value = imageName;
     previewImageSrc.value = pixelArtDataUrl.value;
     imagePreviewDialog.value = true;
