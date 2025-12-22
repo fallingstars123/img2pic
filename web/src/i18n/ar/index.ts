@@ -122,6 +122,23 @@ export default {
     info: 'معلومات'
   },
 
+  // تسريع WASM
+  wasm: {
+    title: 'تسريع WASM',
+    enableWasm: 'تفعيل تسريع WASM',
+    enableWasmDesc: 'استخدام WebAssembly لمعالجة الصور بشكل أسرع',
+    notSupported: 'متصفحك لا يدعم WebAssembly',
+    loading: 'جاري تحميل وحدة WASM...',
+    loaded: 'تم تحميل وحدة WASM بنجاح!',
+    error: 'فشل في تحميل وحدة WASM',
+    notLoaded: 'وحدة WASM غير محملة',
+    preload: 'التحميل المسبق لوحدة WASM',
+    performanceInfo: 'يحسن تسريع WASM الأداء لـ:',
+    performanceConvolution: 'التفاف الصور الكبيرة (2-5 أسرع)',
+    performanceSobel: 'كشف الحواف (2-3 أسرع)',
+    performanceSampling: 'أخذ العينات البكسلية (1.5-2 أسرع)'
+  },
+
   // Home page
   home: {
     subtitle: 'تحويل فن البكسل الزائف المولد بواسطة الذكاء الاصطناعي إلى فن البكسل الحقيقي',

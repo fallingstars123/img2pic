@@ -178,6 +178,23 @@ export default {
     info: '信息'
   },
 
+  // WASM 加速
+  wasm: {
+    title: 'WASM 加速',
+    enableWasm: '啟 WASM 加速',
+    enableWasmDesc: '用 WebAssembly 以速圖像處理',
+    notSupported: '汝之瀏覽器不支持 WebAssembly',
+    loading: '正在載入 WASM 模塊...',
+    loaded: 'WASM 模塊載入成功！',
+    error: 'WASM 模塊載入失敗',
+    notLoaded: 'WASM 模塊未載入',
+    preload: '預載入 WASM 模塊',
+    performanceInfo: 'WASM 加速可提升以下操作之性能：',
+    performanceConvolution: '大圖像卷積運算（二至五倍速）',
+    performanceSobel: '邊緣檢測（二至三倍速）',
+    performanceSampling: '像素採樣（一點五至二倍速）'
+  },
+
   // 語言切換
   language: {
     title: '語言',

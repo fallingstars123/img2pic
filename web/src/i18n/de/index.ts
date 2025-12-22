@@ -122,6 +122,23 @@ export default {
     info: 'Info'
   },
 
+  // WASM Acceleration
+  wasm: {
+    title: 'WASM-Beschleunigung',
+    enableWasm: 'WASM-Beschleunigung aktivieren',
+    enableWasmDesc: 'WebAssembly für schnellere Bildverarbeitung verwenden',
+    notSupported: 'WebAssembly wird von Ihrem Browser nicht unterstützt',
+    loading: 'WASM-Modul wird geladen...',
+    loaded: 'WASM-Modul erfolgreich geladen!',
+    error: 'WASM-Modul konnte nicht geladen werden',
+    notLoaded: 'WASM-Modul nicht geladen',
+    preload: 'WASM-Modul vorladen',
+    performanceInfo: 'WASM-Beschleunigung verbessert die Leistung für:',
+    performanceConvolution: 'Große Bild-Faltung (2-5x schneller)',
+    performanceSobel: 'Kantenerkennung (2-3x schneller)',
+    performanceSampling: 'Pixel-Abtastung (1.5-2x schneller)'
+  },
+
   // Home page
   home: {
     subtitle: 'KI-generiertes Pseudo-Pixel-Art in echtes Pixel-Art umwandeln',

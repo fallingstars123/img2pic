@@ -178,6 +178,23 @@ export default {
     info: 'Информация'
   },
 
+  // WASM ускорение
+  wasm: {
+    title: 'WASM ускорение',
+    enableWasm: 'Включить WASM ускорение',
+    enableWasmDesc: 'Использовать WebAssembly для более быстрой обработки изображений',
+    notSupported: 'WebAssembly не поддерживается вашим браузером',
+    loading: 'Загрузка модуля WASM...',
+    loaded: 'Модуль WASM успешно загружен!',
+    error: 'Не удалось загрузить модуль WASM',
+    notLoaded: 'Модуль WASM не загружен',
+    preload: 'Предзагрузить модуль WASM',
+    performanceInfo: 'WASM ускорение улучшает производительность:',
+    performanceConvolution: 'Большая свертка изображений (2-5x быстрее)',
+    performanceSobel: 'Обнаружение границ (2-3x быстрее)',
+    performanceSampling: 'Сэмплирование пикселей (1.5-2x быстрее)'
+  },
+
   // Переключение языка
   language: {
     title: 'Язык',

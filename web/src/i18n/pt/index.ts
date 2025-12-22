@@ -122,6 +122,23 @@ export default {
     info: 'Info'
   },
 
+  // Aceleração WASM
+  wasm: {
+    title: 'Aceleração WASM',
+    enableWasm: 'Ativar aceleração WASM',
+    enableWasmDesc: 'Usar WebAssembly para processamento de imagem mais rápido',
+    notSupported: 'WebAssembly não é suportado pelo seu navegador',
+    loading: 'Carregando módulo WASM...',
+    loaded: 'Módulo WASM carregado com sucesso!',
+    error: 'Falha ao carregar módulo WASM',
+    notLoaded: 'Módulo WASM não carregado',
+    preload: 'Pré-carregar módulo WASM',
+    performanceInfo: 'A aceleração WASM melhora o desempenho de:',
+    performanceConvolution: 'Grande convolução de imagem (2-5x mais rápido)',
+    performanceSobel: 'Detecção de bordas (2-3x mais rápido)',
+    performanceSampling: 'Amostragem de pixel (1.5-2x mais rápido)'
+  },
+
   // Home page
   home: {
     subtitle: 'Converte arte pixel pseudo gerada por IA em arte pixel real',

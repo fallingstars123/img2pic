@@ -122,6 +122,23 @@ export default {
     info: 'जानकारी'
   },
 
+  // WASM त्वरण
+  wasm: {
+    title: 'WASM त्वरण',
+    enableWasm: 'WASM त्वरण सक्षम करें',
+    enableWasmDesc: 'तेजी से छवि प्रसंस्करण के लिए WebAssembly का उपयोग करें',
+    notSupported: 'WebAssembly आपके ब्राउज़र में समर्थित नहीं है',
+    loading: 'WASM मॉड्यूल लोड हो रहा है...',
+    loaded: 'WASM मॉड्यूल सफलतापूर्वक लोड हो गया!',
+    error: 'WASM मॉड्यूल लोड करने में विफल',
+    notLoaded: 'WASM मॉड्यूल लोड नहीं हुआ',
+    preload: 'WASM मॉड्यूल प्रीलोड करें',
+    performanceInfo: 'WASM त्वरण निम्नलिखित के प्रदर्शन में सुधार करता है:',
+    performanceConvolution: 'बड़ा छवि कनवल्शन (2-5x तेज)',
+    performanceSobel: 'किनारा का पता लगाना (2-3x तेज)',
+    performanceSampling: 'पिक्सेल नमूनाकरण (1.5-2x तेज)'
+  },
+
   // Home page
   home: {
     subtitle: 'AI द्वारा जेनरेट किए गए छद्म पिक्सेल आर्ट को वास्तविक पिक्सेल आर्ट में बदलें',

@@ -178,6 +178,23 @@ export default {
     info: '情報'
   },
 
+  // WASM アクセラレーション
+  wasm: {
+    title: 'WASM アクセラレーション',
+    enableWasm: 'WASM アクセラレーションを有効にする',
+    enableWasmDesc: 'WebAssembly を使用して画像処理を高速化',
+    notSupported: 'お使いのブラウザは WebAssembly をサポートしていません',
+    loading: 'WASM モジュールをロード中...',
+    loaded: 'WASM モジュールが正常にロードされました！',
+    error: 'WASM モジュールのロードに失敗しました',
+    notLoaded: 'WASM モジュールがロードされていません。下のボタンをクリックしてプリロードしてください',
+    preload: 'WASM モジュールをプリロード',
+    performanceInfo: 'WASM アクセラレーションは以下の操作のパフォーマンスを向上させます：',
+    performanceConvolution: '大画像の畳み込み演算（2-5倍速）',
+    performanceSobel: 'エッジ検出（2-3倍速）',
+    performanceSampling: 'ピクセルサンプリング（1.5-2倍速）'
+  },
+
   // 言語切り替え
   language: {
     title: '言語',

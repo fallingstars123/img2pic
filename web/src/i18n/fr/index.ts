@@ -178,6 +178,23 @@ export default {
     info: 'Information'
   },
 
+  // Accélération WASM
+  wasm: {
+    title: 'Accélération WASM',
+    enableWasm: 'Activer l\'accélération WASM',
+    enableWasmDesc: 'Utiliser WebAssembly pour un traitement d\'image plus rapide',
+    notSupported: 'WebAssembly n\'est pas pris en charge par votre navigateur',
+    loading: 'Chargement du module WASM...',
+    loaded: 'Module WASM chargé avec succès!',
+    error: 'Échec du chargement du module WASM',
+    notLoaded: 'Module WASM non chargé',
+    preload: 'Précharger le module WASM',
+    performanceInfo: 'L\'accélération WASM améliore les performances de:',
+    performanceConvolution: 'Grande convolution d\'image (2-5x plus rapide)',
+    performanceSobel: 'Détection des bords (2-3x plus rapide)',
+    performanceSampling: 'Échantillonnage de pixels (1.5-2x plus rapide)'
+  },
+
   // Changement de langue
   language: {
     title: 'Langue',

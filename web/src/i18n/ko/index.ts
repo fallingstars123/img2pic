@@ -122,6 +122,23 @@ export default {
     info: '정보'
   },
 
+  // WASM 가속
+  wasm: {
+    title: 'WASM 가속',
+    enableWasm: 'WASM 가속 활성화',
+    enableWasmDesc: 'WebAssembly를 사용하여 이미지 처리 속도 향상',
+    notSupported: '브라우저가 WebAssembly를 지원하지 않습니다',
+    loading: 'WASM 모듈 로딩 중...',
+    loaded: 'WASM 모듈이 성공적으로 로드되었습니다!',
+    error: 'WASM 모듈 로드 실패',
+    notLoaded: 'WASM 모듈이 로드되지 않음',
+    preload: 'WASM 모듈 사전 로드',
+    performanceInfo: 'WASM 가속은 다음 작업의 성능을 향상시킵니다:',
+    performanceConvolution: '대형 이미지 컨볼루션 (2-5배 더 빠름)',
+    performanceSobel: '에지 감지 (2-3배 더 빠름)',
+    performanceSampling: '픽셀 샘플링 (1.5-2배 더 빠름)'
+  },
+
   // Home page
   home: {
     subtitle: 'AI 생성 가짜 픽셀 아트를 실제 픽셀 아트로 변환',

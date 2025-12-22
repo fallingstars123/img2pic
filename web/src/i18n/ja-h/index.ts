@@ -202,6 +202,23 @@ export default {
     info: '情報'
   },
 
+  // WASM 加速
+  wasm: {
+    title: 'WASM 加速',
+    enableWasm: 'WASM 加速ヲ有効ニスル',
+    enableWasmDesc: 'WebAssemblyヲ使用シテ画像処理ヲ高速化',
+    notSupported: '貴方ノブラウザハ WebAssemblyヲサポート致シマセン',
+    loading: 'WASM モジュールヲ読込中...',
+    loaded: 'WASM モジュールガ正常ニ読込マレマシタ！',
+    error: 'WASM モジュールノ読込ニ失敗シマシタ',
+    notLoaded: 'WASM モジュールガ読込マレテイマセン',
+    preload: 'WASM モジュールヲ先読込',
+    performanceInfo: 'WASM 加速ハ以下ノ操作ノ性能ヲ向上シマス：',
+    performanceConvolution: '大画像ノ畳込演算（2-5倍ノ速度）',
+    performanceSobel: '輪郭検出（2-3倍ノ速度）',
+    performanceSampling: '画素サンプリング（1.5-2倍ノ速度）'
+  },
+
   // 言語切り替え
   language: {
     title: '言語',
