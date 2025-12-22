@@ -67,16 +67,34 @@ export default defineConfig((ctx) => {
       extendViteConf(viteConf) {
         // 配置 WASM 文件加载
         viteConf.assetsInclude = ['**/*.wasm'];
+
+        // 添加 WASM 模块解析别名
+        viteConf.resolve = {
+          ...viteConf.resolve,
+          alias: {
+            ...viteConf.resolve?.alias,
+            '@wasm': fileURLToPath(new URL('./wasm/pkg', import.meta.url)),
+          },
+        };
+
+        // 排除 WASM 模块的预构建
+        viteConf.optimizeDeps = {
+          exclude: ['@wasm'],
+          ...viteConf.optimizeDeps,
+        };
+
+        // Vite 7+ 需要配置 worker 格式
+        viteConf.worker = {
+          format: 'es',
+          ...viteConf.worker,
+        };
+
         // 开发环境下正确处理 WASM
         if (ctx.dev) {
           viteConf.server = {
             ...viteConf.server,
             fs: {
               allow: ['..'],
-            },
-            headers: {
-              'Cross-Origin-Opener-Policy': 'same-origin',
-              'Cross-Origin-Embedder-Policy': 'require-corp',
             },
           };
         }
@@ -146,7 +164,7 @@ export default defineConfig((ctx) => {
     sourceFiles: {
       rootComponent: 'src/App.vue',
       router: 'src/router/index',
-      store: 'src/store/index',
+      store: 'src/stores/index',
       pwaRegisterServiceWorker: 'src-pwa/register-service-worker',
       pwaServiceWorker: 'src-pwa/custom-service-worker',
       pwaManifestFile: 'src-pwa/manifest.json',

@@ -1,6 +1,9 @@
 export type SampleMode = "center" | "average" | "weighted" | "direct";
 
 export interface PipelineParams {
+  // WASM 加速开关
+  wasmEnabled: boolean;
+
   sigma: number;
 
   enhanceEnergy: boolean;

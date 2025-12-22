@@ -5,13 +5,16 @@
 
 import type { SampleMode } from "./types";
 
-// WASM 模块接口定义
+// WASM 模块接口定义（匹配实际 WASM 生成的类型）
 export interface WasmModule {
+  // 初始化 panic hook（用于更好的错误信息）
+  init_panic_hook(): void;
+
   gaussian_kernel_1d(sigma: number): Float32Array;
   convolve_separable(src: Float32Array, width: number, height: number, k: Float32Array): Float32Array;
   sobel(src: Float32Array, width: number, height: number): { gx: Float32Array; gy: Float32Array };
   quantile_approx(x: Float32Array, q: number): number;
-  rgba_to_gray01(rgba: Uint8ClampedArray, width: number, height: number): Float32Array;
+  rgba_to_gray01(rgba: Uint8Array, width: number, height: number): Float32Array;
   grad_energy(gray01: Float32Array, width: number, height: number, sigma: number): Float32Array;
   enhance_energy_directional(
     energy: Float32Array,
@@ -28,7 +31,7 @@ export interface WasmModule {
     gap_tolerance: number,
     min_threshold_ratio: number,
     window_size: number
-  ): number[];
+  ): Uint32Array;
   detect_grid_lines(
     energy_u8: Uint8Array,
     width: number,
@@ -39,10 +42,10 @@ export interface WasmModule {
     smooth_win: number,
     window_size: number
   ): { xLines: number[]; yLines: number[] };
-  interpolate_lines(lines: number[], limit: number, fallback_gap: number): number[];
-  complete_edges(all_lines: number[], limit: number, typical_gap: number, gap_tolerance: number): number[];
+  interpolate_lines(lines: Uint32Array, limit: number, fallback_gap: number): Uint32Array;
+  complete_edges(all_lines: Uint32Array, limit: number, typical_gap: number, gap_tolerance: number): Uint32Array;
   sample_pixel_art_direct(
-    rgb: Uint8ClampedArray,
+    rgb: Uint8Array,
     width: number,
     height: number,
     target_width: number,
@@ -51,18 +54,18 @@ export interface WasmModule {
     weight_ratio: number,
     upscale_factor: number,
     native_res: boolean
-  ): { outW: number; outH: number; outRgb: Uint8Array; outRgba: Uint8Array };
+  ): { outW: number; outH: number; outRgb: Uint8Array; outRgba?: Uint8Array };
   sample_pixel_art(
-    rgb: Uint8ClampedArray,
+    rgb: Uint8Array,
     width: number,
     height: number,
-    all_x: number[],
-    all_y: number[],
+    all_x: Uint32Array,
+    all_y: Uint32Array,
     mode: number,
     weight_ratio: number,
     upscale_factor: number,
     native_res: boolean
-  ): { outW: number; outH: number; outRgb: Uint8Array; outRgba: Uint8Array };
+  ): { outW: number; outH: number; outRgb: Uint8Array; outRgba?: Uint8Array };
 }
 
 // WASM 加载状态
@@ -79,15 +82,14 @@ let useWasmEnabled = false;
 
 /**
  * 设置是否使用 WASM 加速
+ * 注意：这只是偏好设置，不会释放已加载的 WASM 模块
+ * 每个 JavaScript 上下文（主线程和 Worker）维护自己的 WASM 实例
  * @param enabled 是否启用 WASM
  */
 export function setWasmEnabled(enabled: boolean): void {
   useWasmEnabled = enabled;
-  // 如果禁用 WASM，释放模块
-  if (!enabled && wasmModule) {
-    wasmModule = null;
-    wasmState = 'unloaded';
-  }
+  // 不再释放模块 - 每个上下文维护自己的 WASM 实例
+  // 这允许 Worker 独立加载和使用 WASM
 }
 
 /**
@@ -113,32 +115,46 @@ export function getWasmError(): Error | null {
 
 /**
  * 加载 WASM 模块
+ * bundler 目标：直接导入 JS 绑定，函数已自动初始化
+ * 每个 JavaScript 上下文（主线程和 Worker）需要独立加载
  * @returns Promise<WasmModule>
  */
 export async function loadWasmModule(): Promise<WasmModule> {
   // 如果已经加载，直接返回
   if (wasmModule) {
+    console.log('[WASM] Module already loaded, reusing');
     return wasmModule;
   }
 
   // 如果正在加载，返回加载 Promise
   if (wasmLoadPromise) {
+    console.log('[WASM] Already loading, waiting for existing promise');
     return wasmLoadPromise;
   }
 
   // 开始加载
+  console.log('[WASM] Starting module load...');
   wasmState = 'loading';
   wasmLoadPromise = (async () => {
     try {
-      // 动态导入 WASM 模块
-      // 注意：WASM 文件需要先通过 wasm-pack 构建
-      const wasmUrl = new URL('/wasm/index_bg.wasm', import.meta.url);
+      // bundler 目标：直接导入，函数已自动初始化
+      console.log('[WASM] Loading WASM JS bindings from @wasm/index.js');
+      const wasmModuleImport = await import('@wasm/index.js');
 
-      // @ts-expect-error - WASM 模块由 wasm-pack 生成，构建后才存在
-      const { default: init } = await import('/wasm/index.js');
-      const module = await init(wasmUrl.toString());
+      // bundler 目标直接导出所有函数，不需要 init()
+      wasmModule = wasmModuleImport as unknown as WasmModule;
 
-      wasmModule = module as unknown as WasmModule;
+      // 手动初始化 panic hook（如果存在）
+      try {
+        if (typeof wasmModule.init_panic_hook === 'function') {
+          wasmModule.init_panic_hook();
+          console.log('[WASM] Panic hook initialized');
+        }
+      } catch {
+        // init_panic_hook 可能不存在，忽略错误
+        console.log('[WASM] init_panic_hook not available, skipping');
+      }
+
       wasmState = 'loaded';
       wasmError = null;
 
@@ -185,18 +201,16 @@ export function getWasmModule(): WasmModule | null {
 
 /**
  * 确保 WASM 模块已加载
+ * 注意：每个 JavaScript 上下文（主线程和 Worker）需要各自加载 WASM 实例
  * @returns Promise<WasmModule | null>
  */
 export async function ensureWasmLoaded(): Promise<WasmModule | null> {
-  if (!useWasmEnabled) {
-    return null;
-  }
-
   if (!isWasmSupported()) {
-    console.warn('[WASM] Not supported in this browser');
     return null;
   }
 
+  // 即使 useWasmEnabled 为 false，也尝试加载 WASM
+  // 这允许 Worker 独立加载自己的 WASM 实例
   try {
     return await loadWasmModule();
   } catch (err) {

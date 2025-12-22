@@ -8,9 +8,13 @@ const STORAGE_KEY_WASM_ENABLED = 'img2pic_wasm_enabled';
 function loadWasmSetting(): boolean {
   try {
     const value = localStorage.getItem(STORAGE_KEY_WASM_ENABLED);
-    return value === 'true';
+    if (value !== null) {
+      return value === 'true';
+    }
+    // 默认启用 WASM（每个上下文会独立加载自己的 WASM 实例）
+    return true;
   } catch {
-    return false; // 默认不启用 WASM
+    return true; // 默认启用 WASM
   }
 }
 
@@ -30,12 +34,16 @@ export const useSettingsStore = defineStore('settings', () => {
   const wasmEnabled = ref(loadWasmSetting());
 
   // 监听变化，同步到 localStorage 和 wasmApi
-  watch(wasmEnabled, (newValue) => {
+  watch(wasmEnabled, (newValue, oldValue) => {
     saveWasmSetting(newValue);
     setWasmEnabled(newValue);
+    if (newValue !== oldValue) {
+      console.log(`[Settings] WASM engine ${newValue ? 'enabled' : 'disabled'}, will use ${newValue ? 'WASM' : 'JS'} for rendering`);
+    }
   }, { immediate: true });
 
   // 初始化时设置 WASM 状态
+  console.log(`[Settings] Initial WASM state: ${wasmEnabled.value ? 'enabled' : 'disabled'}, will use ${wasmEnabled.value ? 'WASM' : 'JS'} for rendering`);
   setWasmEnabled(wasmEnabled.value);
 
   return {

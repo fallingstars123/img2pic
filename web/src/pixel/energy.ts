@@ -1,7 +1,7 @@
 import { gaussianKernel1d, convolveSeparable, sobel } from "./filters";
 import { quantileApprox } from "./stats";
 
-export function rgbaToGray01(rgba: Uint8ClampedArray, width: number, height: number): Float32Array {
+export function rgbaToGray01(rgba: Uint8Array | Uint8ClampedArray, width: number, height: number): Float32Array {
   const gray = new Float32Array(width * height);
   for (let i = 0, p = 0; p < gray.length; p++, i += 4) {
     const r = (rgba[i] || 0) / 255;

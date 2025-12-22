@@ -34,7 +34,8 @@ yarn-error.log*
 
 # Rust/WASM build artifacts
 /wasm/target
-/wasm/pkg
 /wasm/Cargo.lock
+# Ignore *.wasm except in wasm/pkg (we commit the pre-built WASM)
 *.wasm
+!/wasm/pkg/*.wasm
 *.rs.bk

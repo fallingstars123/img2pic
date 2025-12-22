@@ -329,7 +329,7 @@ export function completeEdges(
 }
 
 export function samplePixelArtDirect(
-  rgb: Uint8ClampedArray,
+  rgb: Uint8Array | Uint8ClampedArray,
   width: number,
   height: number,
   targetWidth: number,
@@ -502,7 +502,7 @@ export function samplePixelArtDirect(
 }
 
 export function samplePixelArt(
-  rgb: Uint8ClampedArray,
+  rgb: Uint8Array | Uint8ClampedArray,
   width: number,
   height: number,
   allX: number[],

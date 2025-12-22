@@ -514,13 +514,16 @@ import { useI18n } from 'vue-i18n';
 import { saveAs } from 'file-saver';
 import UPNG from 'upng-js';
 import { createPixelWorker } from 'src/pixel/workerApi';
+import { runPipeline } from 'src/pixel/pipeline';
 import type { PipelineParams, PipelineResult } from 'src/pixel/types';
 import InlineImageViewer from 'src/components/InlineImageViewer.vue';
 import WasmSettings from 'src/components/WasmSettings.vue';
 import { storageService } from 'src/utils/storage';
+import { useSettingsStore } from 'src/stores/settings';
 
 const $q = useQuasar();
 const { t } = useI18n();
+const settingsStore = useSettingsStore();
 
 // 状态变量
 const selectedFile = ref<File | null>(null);
@@ -545,6 +548,7 @@ const useDirectSampling = ref(false);
 
 // 能量算法参数
 const params = reactive<PipelineParams>({
+  wasmEnabled: false,
   sigma: 1.0,
   enhanceEnergy: false,
   enhanceDirectional: false,
@@ -758,8 +762,11 @@ async function processImage() {
       rgba: imageData.data.buffer,
     };
 
-    // 将 reactive params 转换为普通对象，以便 Comlink 可以序列化
-    const plainParams = JSON.parse(JSON.stringify(params));
+    // 将 reactive params 转换为普通对象
+    const plainParams = {
+      ...JSON.parse(JSON.stringify(params)),
+      wasmEnabled: settingsStore.wasmEnabled
+    };
 
     console.log('Input data:', {
       width: input.width,
@@ -768,10 +775,20 @@ async function processImage() {
       params: plainParams
     });
 
-    // 调用Worker处理
-    const resultData = await workerInstance!.api.runPipeline(input, plainParams);
+    let resultData: PipelineResult;
 
-    console.log('Worker result:', resultData);
+    // 根据 WASM 设置选择执行方式
+    if (settingsStore.wasmEnabled) {
+      // WASM 启用：在主线程直接运行（WASM 只在主线程工作）
+      console.log('[Main Thread] Running pipeline with WASM...');
+      resultData = await runPipeline(input, plainParams, 'main');
+    } else {
+      // WASM 禁用：使用 Worker 运行（避免阻塞主线程）
+      console.log('[Worker] Running pipeline with JavaScript...');
+      resultData = await workerInstance!.api.runPipeline(input, plainParams);
+    }
+
+    console.log('Pipeline result:', resultData);
     console.log('Show debug:', showDebug.value);
     console.log('Has pixel art:', !!resultData.pixelArt);
     if (resultData.pixelArt) {

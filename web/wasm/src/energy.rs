@@ -26,7 +26,23 @@ pub fn quantile_approx(x: &[f32], q: f64) -> f32 {
 /// 使用标准亮度系数: 0.299*R + 0.587*G + 0.114*B
 #[wasm_bindgen]
 pub fn rgba_to_gray01(rgba: &[u8], width: usize, height: usize) -> Vec<f32> {
+    // 调试：记录接收到的参数
+    web_sys::console::log_1(
+        &format!("rgba_to_gray01 received: rgba.len()={}, width={}, height={}", rgba.len(), width, height).into()
+    );
+
     let pixel_count = width * height;
+    let expected_rgba_len = pixel_count * 4;
+
+    // 验证输入数组长度
+    if rgba.len() != expected_rgba_len {
+        web_sys::console::error_1(
+            &format!("rgba_to_gray01: expected rgba length {}, got {}", expected_rgba_len, rgba.len()).into()
+        );
+        // 返回空数组
+        return vec![0.0f32; pixel_count];
+    }
+
     let mut gray = vec![0.0f32; pixel_count];
 
     for (p, pixel) in gray.iter_mut().enumerate() {

@@ -6,7 +6,7 @@
  */
 
 import { spawn, execSync } from 'child_process';
-import { existsSync } from 'fs';
+import { existsSync, readFileSync, writeFileSync } from 'fs';
 import { dirname, join } from 'path';
 import { fileURLToPath } from 'url';
 import { platform } from 'os';
@@ -121,17 +121,69 @@ async function buildWasm(dev = false) {
   logInfo(`Building WASM module in ${mode} mode...`);
 
   try {
-    const args = ['build', '--target', 'web', '--out-name', 'index'];
+    // 使用 bundler 目标，更适合与 Vite 一起使用
+    const args = ['build', '--target', 'bundler', '--out-name', 'index'];
     if (!dev) {
       args.push('--release');
     }
 
     await runCommand('wasm-pack', args, { cwd: wasmDir });
     logSuccess('WASM module built successfully');
+
+    // 修补生成的 index.js 文件
+    patchIndexJs();
+
     return true;
   } catch (err) {
     logError('Failed to build WASM module:', err.message);
     return false;
+  }
+}
+
+/**
+ * 修补生成的 index.js 文件
+ * wasm-pack 生成的代码会调用 wasm.__wbindgen_start()，
+ * 但这个函数只在有 #[wasm_bindgen(start)] 时才存在
+ * 我们手动检查函数是否存在再调用
+ */
+function patchIndexJs() {
+  const indexPath = join(wasmDir, 'pkg', 'index.js');
+
+  if (!existsSync(indexPath)) {
+    logWarn('index.js not found, skipping patch');
+    return;
+  }
+
+  try {
+    let content = readFileSync(indexPath, 'utf-8');
+
+    // 检查是否已经被修补过（检查是否包含我们的注释）
+    if (content.includes('__wbindgen_start is only available when using')) {
+      logInfo('index.js already patched, skipping');
+      return;
+    }
+
+    // 替换 wasm.__wbindgen_start(); 调用
+    const original = 'wasm.__wbindgen_start();';
+    if (!content.includes(original)) {
+      logInfo('index.js does not need patching (no __wbindgen_start call)');
+      return;
+    }
+
+    content = content.replace(
+      original,
+      `// __wbindgen_start is only available when using #[wasm_bindgen(start)]
+// We use init_panic_hook() instead
+if (typeof wasm.__wbindgen_start === 'function') {
+  wasm.__wbindgen_start();
+}`
+    );
+
+    writeFileSync(indexPath, content, 'utf-8');
+    logSuccess('Patched index.js to handle missing __wbindgen_start');
+  } catch (err) {
+    logWarn('Failed to patch index.js:', err.message);
+    // 不中断构建，只是警告
   }
 }
 

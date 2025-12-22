@@ -69,6 +69,20 @@ fn autocorr_score(x: &[f32], lag: usize) -> f32 {
 /// 检测像素大小（通过自相关分析）
 #[wasm_bindgen]
 pub fn detect_pixel_size(energy_u8: &[u8], width: usize, height: usize, min_s: usize, max_s: usize) -> usize {
+    // 调试：记录接收到的参数
+    web_sys::console::log_1(
+        &format!("detect_pixel_size received: energy_u8.len()={}, width={}, height={}", energy_u8.len(), width, height).into()
+    );
+
+    // 验证输入数组长度
+    let expected_len = width * height;
+    if energy_u8.len() != expected_len {
+        web_sys::console::error_1(
+            &format!("detect_pixel_size: expected array length {}, got {}", expected_len, energy_u8.len()).into()
+        );
+        return min_s; // 返回默认值
+    }
+
     // 投影
     let mut px = vec![0.0f32; width];
     let mut py = vec![0.0f32; height];
@@ -242,6 +256,20 @@ pub fn detect_grid_lines(
     smooth_win: usize,
     window_size: usize,
 ) -> JsValue {
+    // 验证输入数组长度
+    let expected_len = width * height;
+    if energy_u8.len() != expected_len {
+        web_sys::console::error_1(
+            &format!("detect_grid_lines: expected array length {}, got {}", expected_len, energy_u8.len()).into()
+        );
+        // 返回空结果
+        let result = js_sys::Object::new();
+        let empty = js_sys::Uint32Array::from(&[0u32][..]);
+        js_sys::Reflect::set(&result, &"xLines".into(), &empty).unwrap();
+        js_sys::Reflect::set(&result, &"yLines".into(), &empty).unwrap();
+        return JsValue::from(result);
+    }
+
     // 计算投影
     let mut x_prof = vec![0.0f32; width];
     let mut y_prof = vec![0.0f32; height];
@@ -295,6 +323,13 @@ pub fn interpolate_lines(lines: &[usize], limit: usize, fallback_gap: usize) -> 
     }
 
     let typical = median_gap(lines, fallback_gap);
+
+    // 避免除零错误
+    if typical == 0 {
+        web_sys::console::error_1(&"interpolate_lines: typical gap is 0, cannot interpolate".into());
+        return lines.to_vec();
+    }
+
     let mut all: BTreeSet<usize> = lines.iter().copied().collect();
 
     // 在第一条线之前插值
@@ -385,7 +420,7 @@ pub fn complete_edges(
             }
         }
         lines = {
-            let mut combined: BTreeSet<usize> = lines.into_iter().chain(edge.into_iter()).collect();
+            let combined: BTreeSet<usize> = lines.into_iter().chain(edge.into_iter()).collect();
             combined.into_iter().collect()
         };
         lines.sort();

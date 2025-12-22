@@ -98,7 +98,7 @@
         color="secondary"
         outline
         class="q-mt-md"
-        :loading="wasmState === 'loading' || wasmState === 'unloaded'"
+        :loading="wasmState === 'loading'"
         @click="onPreloadWasm"
       />
     </q-card>
@@ -106,7 +106,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { useSettingsStore } from '../stores/settings';
 import {
   isWasmSupported,
@@ -121,32 +121,51 @@ const settingsStore = useSettingsStore();
 const isSupported = ref(false);
 const wasmState = ref<'unloaded' | 'loading' | 'loaded' | 'error'>('unloaded');
 const wasmError = ref<Error | null>(null);
-let updateInterval: ReturnType<typeof setInterval> | null = null;
 
-// 初始化
-onMounted(() => {
+// 初始化 - 自动尝试加载 WASM
+onMounted(async () => {
+  console.log('[WasmSettings] Component mounted');
   isSupported.value = isWasmSupported();
+  console.log('[WasmSettings] WASM supported:', isSupported.value);
   updateState();
 
-  // 每秒更新状态
-  updateInterval = setInterval(() => {
+  // 如果支持 WASM 且已启用，自动尝试加载
+  if (isSupported.value && settingsStore.wasmEnabled) {
+    console.log('[WasmSettings] Auto-loading WASM...');
+    try {
+      await preloadWasm();
+      console.log('[WasmSettings] WASM auto-load completed');
+    } catch (err) {
+      console.warn('[WasmSettings] WASM auto-load failed, will use JS fallback:', err);
+      // 加载失败，禁用 WASM 并使用 JS
+      settingsStore.wasmEnabled = false;
+    }
     updateState();
-  }, 500);
-});
-
-onUnmounted(() => {
-  if (updateInterval) {
-    clearInterval(updateInterval);
   }
 });
 
+// 更新状态（只在状态变化时打印日志）
 function updateState() {
-  wasmState.value = getWasmState();
-  wasmError.value = getWasmError();
+  const newState = getWasmState();
+  const newError = getWasmError();
+
+  if (newState !== wasmState.value || newError !== wasmError.value) {
+    wasmState.value = newState;
+    wasmError.value = newError;
+    console.log('[WasmSettings] State update:', { state: wasmState.value, error: wasmError.value });
+  }
 }
 
 async function onPreloadWasm() {
-  await preloadWasm();
+  console.log('[WasmSettings] Preload button clicked');
+  try {
+    await preloadWasm();
+    console.log('[WasmSettings] Preload completed');
+  } catch (err) {
+    console.error('[WasmSettings] Preload failed:', err);
+    // 加载失败，禁用 WASM
+    settingsStore.wasmEnabled = false;
+  }
   updateState();
 }
 </script>
