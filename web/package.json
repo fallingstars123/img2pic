@@ -11,7 +11,10 @@
     "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore",
     "test": "echo \"No test specified\" && exit 0",
     "dev": "quasar dev",
+    "dev:pwa": "DEV_PWA=true quasar dev -m pwa",
     "build": "quasar build",
+    "build:pwa": "node scripts/build-pwa.js",
+    "build:spa": "quasar build -m spa",
     "build:cf": "quasar build -m spa",
     "deploy:cf": "npm run build:cf && cd workers-site && npm install && npm run deploy:production",
     "deploy:cf:staging": "npm run build:cf && cd workers-site && npm install && npm run deploy:staging",
@@ -27,7 +30,8 @@
     "upng-js": "^2.1.0",
     "vue": "^3.5.22",
     "vue-i18n": "^11.0.0",
-    "vue-router": "^4.0.12"
+    "vue-router": "^4.0.12",
+    "workbox-window": "^7.4.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.14.0",

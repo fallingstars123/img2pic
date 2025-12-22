@@ -46,6 +46,7 @@
     </q-drawer>
 
     <q-page-container>
+      <PWAInstaller />
       <router-view />
     </q-page-container>
   </q-layout>
@@ -55,6 +56,7 @@
 import { ref, computed, watch } from 'vue';
 import { useI18n } from 'vue-i18n';
 import EssentialLink, { type EssentialLinkProps } from 'components/EssentialLink.vue';
+import PWAInstaller from 'components/PWAInstaller.vue';
 import { storageService } from 'src/utils/storage';
 
 const { locale, t } = useI18n();

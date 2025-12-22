@@ -12,7 +12,7 @@ export default defineConfig((ctx) => {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
-    boot: ['i18n', 'axios'],
+    boot: ['i18n', 'axios', 'pwa'],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#css
     css: ['app.scss'],
@@ -124,17 +124,17 @@ export default defineConfig((ctx) => {
     animations: [],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#sourcefiles
-    // sourceFiles: {
-    //   rootComponent: 'src/App.vue',
-    //   router: 'src/router/index',
-    //   store: 'src/store/index',
-    //   pwaRegisterServiceWorker: 'src-pwa/register-service-worker',
-    //   pwaServiceWorker: 'src-pwa/custom-service-worker',
-    //   pwaManifestFile: 'src-pwa/manifest.json',
-    //   electronMain: 'src-electron/electron-main',
-    //   electronPreload: 'src-electron/electron-preload'
-    //   bexManifestFile: 'src-bex/manifest.json
-    // },
+    sourceFiles: {
+      rootComponent: 'src/App.vue',
+      router: 'src/router/index',
+      store: 'src/store/index',
+      pwaRegisterServiceWorker: 'src-pwa/register-service-worker',
+      pwaServiceWorker: 'src-pwa/custom-service-worker',
+      pwaManifestFile: 'src-pwa/manifest.json',
+      // electronMain: 'src-electron/electron-main',
+      // electronPreload: 'src-electron/electron-preload'
+      // bexManifestFile: 'src-bex/manifest.json'
+    },
 
     // https://v2.quasar.dev/quasar-cli-vite/developing-ssr/configuring-ssr
     ssr: {
@@ -162,15 +162,46 @@ export default defineConfig((ctx) => {
 
     // https://v2.quasar.dev/quasar-cli-vite/developing-pwa/configuring-pwa
     pwa: {
-      workboxMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
-      // swFilename: 'sw.js',
-      // manifestFilename: 'manifest.json',
-      // extendManifestJson (json) {},
-      // useCredentialsForManifestTag: true,
-      // injectPwaMetaTags: false,
-      // extendPWACustomSWConf (esbuildConf) {},
-      // extendGenerateSWOptions (cfg) {},
-      // extendInjectManifestOptions (cfg) {}
+      workboxMode: 'InjectManifest', // Use 'InjectManifest' for custom service worker
+      injectPwaMetaTags: true,
+      swFilename: 'sw.js',
+      manifestFilename: 'manifest.json',
+
+      extendGenerateSWOptions (cfg) {
+        // Custom Workbox options
+        cfg.skipWaiting = true;
+        cfg.clientsClaim = true;
+        cfg.cleanupOutdatedCaches = true;
+      },
+
+      extendInjectManifestOptions (cfg) {
+        // Custom service worker injection options
+        cfg.globPatterns = [
+          '**/*.{js,css,html,png,jpg,jpeg,svg,ico,woff,woff2}'
+        ];
+      },
+
+      extendPWACustomSWConf (esbuildConf) {
+        // Custom build configuration for service worker
+        esbuildConf.define = {
+          'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
+        };
+      },
+
+      extendManifestJson (json) {
+        // Override default manifest with custom values
+        json.name = "img2pic - 像素画转换器";
+        json.short_name = "img2pic";
+        json.description = "将AI生成的伪像素画转换成真像素画";
+        json.display = "standalone";
+        json.background_color = "#ffffff";
+        json.theme_color = "#027be3";
+        json.start_url = "/";
+        json.scope = "/";
+        json.orientation = "any";
+        json.lang = "zh-CN";
+        json.categories = ["graphics", "utilities", "productivity"];
+      }
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-cordova-apps/configuring-cordova
