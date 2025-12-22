@@ -4,6 +4,8 @@ import { rgbaToGray01, gradEnergy, enhanceEnergyDirectional, toHeatmapU8 } from 
 import { detectPixelSize, detectGridLines, interpolateLines, completeEdges, samplePixelArt } from "../grid";
 
 function runPipeline(img: RgbaImage, params: PipelineParams): PipelineResult {
+  console.log('Worker: runPipeline started', { width: img.width, height: img.height, params });
+
   const width = img.width;
   const height = img.height;
 
@@ -24,10 +26,11 @@ function runPipeline(img: RgbaImage, params: PipelineParams): PipelineResult {
   const energyU8 = toHeatmapU8(energy);
 
   // 2) pixel size detect (if needed)
-  let pixelSize = params.pixelSize | 0;
+  let pixelSize = params.pixelSize || 0;
   if (pixelSize <= 0) {
     pixelSize = detectPixelSize(energyU8, width, height, params.minS, params.maxS);
   }
+  console.log('Worker: detected pixelSize:', pixelSize);
 
   // 3) grid detect
   const { xLines, yLines } = detectGridLines(
@@ -40,6 +43,7 @@ function runPipeline(img: RgbaImage, params: PipelineParams): PipelineResult {
     params.smooth,
     params.windowSize
   );
+  console.log('Worker: grid lines detected', { xLines: xLines.length, yLines: yLines.length });
 
   // 4) interpolate + complete edges
   const allX0 = interpolateLines(xLines, width, pixelSize);
@@ -116,6 +120,15 @@ function runPipeline(img: RgbaImage, params: PipelineParams): PipelineResult {
   // transfer 大 buffer
   const transfers: Transferable[] = [res.energyU8];
   if (res.pixelArt) transfers.push(res.pixelArt.rgb);
+
+  console.log('Worker: returning result', {
+    width: res.width,
+    height: res.height,
+    detectedPixelSize: res.detectedPixelSize,
+    xLines: res.xLines.length,
+    yLines: res.yLines.length,
+    hasPixelArt: !!res.pixelArt
+  });
 
   return Comlink.transfer(res, transfers);
 }

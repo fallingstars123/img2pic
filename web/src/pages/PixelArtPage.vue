@@ -12,7 +12,6 @@
               v-model="selectedFile"
               label="选择图片"
               accept="image/*"
-              @update:model-value="onFileSelected"
               class="q-mb-md"
             >
               <template v-slot:prepend>
@@ -28,43 +27,55 @@
             >
               <q-card flat bordered class="q-pa-md">
                 <!-- 基础参数 -->
-                <q-slider
-                  v-model="params.sigma"
-                  :min="0"
-                  :max="5"
-                  :step="0.1"
-                  label
-                  label-always
-                  class="q-mb-md"
-                />
+                <div class="q-mb-md">
+                  <div class="text-body2 q-mb-sm">高斯模糊 (σ): {{ params.sigma.toFixed(1) }}</div>
+                  <q-slider
+                    v-model="params.sigma"
+                    :min="0"
+                    :max="5"
+                    :step="0.1"
+                    label
+                    label-always
+                    class="q-mb-md"
+                  />
+                </div>
 
-                <q-slider
-                  v-model="params.gapTolerance"
-                  :min="0"
-                  :max="10"
-                  label
-                  label-always
-                  class="q-mb-md"
-                />
+                <div class="q-mb-md">
+                  <div class="text-body2 q-mb-sm">间隙容忍度: {{ params.gapTolerance }}</div>
+                  <q-slider
+                    v-model="params.gapTolerance"
+                    :min="0"
+                    :max="10"
+                    label
+                    label-always
+                    class="q-mb-md"
+                  />
+                </div>
 
-                <q-slider
-                  v-model="params.minEnergy"
-                  :min="0"
-                  :max="1"
-                  :step="0.01"
-                  label
-                  label-always
-                  class="q-mb-md"
-                />
+                <div class="q-mb-md">
+                  <div class="text-body2 q-mb-sm">最小能量阈值: {{ params.minEnergy.toFixed(2) }}</div>
+                  <q-slider
+                    v-model="params.minEnergy"
+                    :min="0"
+                    :max="1"
+                    :step="0.01"
+                    label
+                    label-always
+                    class="q-mb-md"
+                  />
+                </div>
 
-                <q-slider
-                  v-model="params.smooth"
-                  :min="1"
-                  :max="15"
-                  label
-                  label-always
-                  class="q-mb-md"
-                />
+                <div class="q-mb-md">
+                  <div class="text-body2 q-mb-sm">平滑窗口大小: {{ params.smooth }}</div>
+                  <q-slider
+                    v-model="params.smooth"
+                    :min="1"
+                    :max="15"
+                    label
+                    label-always
+                    class="q-mb-md"
+                  />
+                </div>
 
                 <!-- 能量增强选项 -->
                 <q-toggle
@@ -81,56 +92,71 @@
                   />
 
                   <template v-if="params.enhanceDirectional">
-                    <q-slider
-                      v-model="params.enhanceHorizontal"
-                      :min="0.5"
-                      :max="3"
-                      :step="0.1"
-                      label
-                      label-always
-                      class="q-mb-md"
-                    />
+                    <div class="q-mb-md">
+                      <div class="text-body2 q-mb-sm">水平增强倍数: {{ params.enhanceHorizontal.toFixed(1) }}</div>
+                      <q-slider
+                        v-model="params.enhanceHorizontal"
+                        :min="0.5"
+                        :max="3"
+                        :step="0.1"
+                        label
+                        label-always
+                        class="q-mb-md"
+                      />
+                    </div>
 
-                    <q-slider
-                      v-model="params.enhanceVertical"
-                      :min="0.5"
-                      :max="3"
-                      :step="0.1"
-                      label
-                      label-always
-                      class="q-mb-md"
-                    />
+                    <div class="q-mb-md">
+                      <div class="text-body2 q-mb-sm">垂直增强倍数: {{ params.enhanceVertical.toFixed(1) }}</div>
+                      <q-slider
+                        v-model="params.enhanceVertical"
+                        :min="0.5"
+                        :max="3"
+                        :step="0.1"
+                        label
+                        label-always
+                        class="q-mb-md"
+                      />
+                    </div>
                   </template>
                 </template>
 
                 <!-- 像素大小检测 -->
-                <q-slider
-                  v-model="params.pixelSize"
-                  :min="0"
-                  :max="20"
-                  label
-                  label-always
-                  class="q-mb-md"
-                />
+                <div class="q-mb-md">
+                  <div class="text-body2 q-mb-sm">像素大小: {{ params.pixelSize === 0 ? '自动检测' : params.pixelSize }}</div>
+                  <q-slider
+                    v-model="params.pixelSize"
+                    :min="0"
+                    :max="20"
+                    label
+                    label-always
+                    class="q-mb-md"
+                  />
+                </div>
 
                 <template v-if="params.pixelSize === 0">
-                  <q-slider
-                    v-model="params.minS"
-                    :min="2"
-                    :max="8"
-                    label
-                    label-always
-                    class="q-mb-md"
-                  />
+                  <div class="q-mb-md">
+                    <div class="text-body2 q-mb-sm">最小像素大小: {{ params.minS }}</div>
+                    <q-slider
+                      v-model="params.minS"
+                      :min="2"
+                      :max="8"
+                      label
+                      label-always
+                      class="q-mb-md"
+                    />
+                  </div>
 
-                  <q-slider
-                    v-model="params.maxS"
-                    :min="10"
-                    :max="40"
-                    label
-                    label-always
-                    class="q-mb-md"
-                  />
+                  <div class="q-mb-md">
+                    <div class="text-body2 q-mb-sm">最大像素大小: {{ params.maxS }}</div>
+                    <q-slider
+                      v-model="params.maxS"
+                      :min="10"
+                      :max="40"
+                      label
+                      label-always
+                      class="q-mb-md"
+                    />
+                  </div>
                 </template>
 
                 <!-- 采样参数 -->
@@ -157,26 +183,32 @@
                   />
 
                   <template v-if="!params.nativeRes">
-                    <q-slider
-                      v-model="params.upscale"
-                      :min="0"
-                      :max="10"
-                      label
-                      label-always
-                      class="q-mb-md"
-                    />
+                    <div class="q-mb-md">
+                      <div class="text-body2 q-mb-sm">放大倍数: {{ params.upscale === 0 ? '自动' : params.upscale }}</div>
+                      <q-slider
+                        v-model="params.upscale"
+                        :min="0"
+                        :max="10"
+                        label
+                        label-always
+                        class="q-mb-md"
+                      />
+                    </div>
                   </template>
 
                   <template v-if="params.sampleMode === 'weighted'">
-                    <q-slider
-                      v-model="params.sampleWeightRatio"
-                      :min="0.1"
-                      :max="0.9"
-                      :step="0.1"
-                      label
-                      label-always
-                      class="q-mb-md"
-                    />
+                    <div class="q-mb-md">
+                      <div class="text-body2 q-mb-sm">加权比例: {{ params.sampleWeightRatio.toFixed(1) }}</div>
+                      <q-slider
+                        v-model="params.sampleWeightRatio"
+                        :min="0.1"
+                        :max="0.9"
+                        :step="0.1"
+                        label
+                        label-always
+                        class="q-mb-md"
+                      />
+                    </div>
                   </template>
                 </template>
               </q-card>
@@ -220,7 +252,7 @@
             <q-card>
               <q-card-section>
                 <div class="text-h6 q-mb-md">原始图片</div>
-                <div v-if="originalImage" class="text-center">
+                <div v-if="imageLoaded" class="text-center">
                   <canvas ref="originalCanvas" style="max-width: 100%; height: auto;" />
                 </div>
                 <div v-else class="text-center text-grey-6 q-pa-lg">
@@ -276,7 +308,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, onUnmounted } from 'vue';
+import { ref, reactive, onMounted, onUnmounted, nextTick, watch } from 'vue';
 import { useQuasar } from 'quasar';
 import { saveAs } from 'file-saver';
 import { createPixelWorker } from 'src/pixel/workerApi';
@@ -286,11 +318,12 @@ const $q = useQuasar();
 
 // 状态变量
 const selectedFile = ref<File | null>(null);
-const originalImage = ref<HTMLCanvasElement | null>(null);
+const originalCanvas = ref<HTMLCanvasElement | null>(null);
+const imageLoaded = ref(false);
 const debugCanvas = ref<HTMLCanvasElement | null>(null);
 const pixelCanvas = ref<HTMLCanvasElement | null>(null);
 const processing = ref(false);
-const showDebug = ref(false);
+const showDebug = ref(true); // 默认开启调试模式，方便查看能量图和网格线
 const result = ref<PipelineResult | null>(null);
 let workerInstance: ReturnType<typeof createPixelWorker> | null = null;
 
@@ -324,7 +357,9 @@ const sampleModeOptions = [
 
 // 初始化Worker
 onMounted(() => {
+  console.log('Component mounted, creating worker');
   workerInstance = createPixelWorker();
+  console.log('Worker created', !!workerInstance);
 });
 
 onUnmounted(() => {
@@ -333,58 +368,119 @@ onUnmounted(() => {
   }
 });
 
-// 文件选择处理
-function onFileSelected(file: File) {
-  if (!file || !originalImage.value) return;
+// 监听文件变化
+watch(selectedFile, async (file) => {
+  console.log('File changed', { file: file?.name });
+
+  if (!file) {
+    console.log('Early return: no file');
+    imageLoaded.value = false;
+    return;
+  }
+
+  // 先标记为已加载，这样canvas会被渲染
+  imageLoaded.value = true;
+
+  // 使用nextTick确保DOM已渲染，canvas元素可用
+  await nextTick();
+
+  if (!originalCanvas.value) {
+    console.log('Early return: canvas not available after nextTick');
+    imageLoaded.value = false;
+    return;
+  }
 
   const img = new Image();
   img.onload = () => {
+    console.log('Image loaded', { width: img.width, height: img.height });
     // 调整canvas大小
-    originalImage.value!.width = img.width;
-    originalImage.value!.height = img.height;
+    originalCanvas.value!.width = img.width;
+    originalCanvas.value!.height = img.height;
 
     // 绘制图片
-    const ctx = originalImage.value!.getContext('2d')!;
+    const ctx = originalCanvas.value!.getContext('2d')!;
     ctx.drawImage(img, 0, 0);
+    console.log('Image drawn to canvas');
 
     // 重置结果
     result.value = null;
   };
+  img.onerror = () => {
+    console.error('Failed to load image');
+    imageLoaded.value = false;
+  };
   img.src = URL.createObjectURL(file);
-}
+});
 
 // 处理图片
 async function processImage() {
-  if (!selectedFile.value || !originalImage.value) return;
+  console.log('processImage called', { selectedFile: selectedFile.value, originalCanvas: !!originalCanvas.value });
+  if (!selectedFile.value || !originalCanvas.value) {
+    console.log('Early return: missing file or image');
+    return;
+  }
 
   processing.value = true;
+  console.log('Processing started');
 
   try {
     // 获取图片数据
-    const ctx = originalImage.value.getContext('2d')!;
-    const imageData = ctx.getImageData(0, 0, originalImage.value.width, originalImage.value.height);
+    const ctx = originalCanvas.value.getContext('2d')!;
+    const imageData = ctx.getImageData(0, 0, originalCanvas.value.width, originalCanvas.value.height);
 
     // 准备输入数据
     const input = {
-      width: originalImage.value.width,
-      height: originalImage.value.height,
+      width: originalCanvas.value.width,
+      height: originalCanvas.value.height,
       rgba: imageData.data.buffer,
     };
 
+    // 将 reactive params 转换为普通对象，以便 Comlink 可以序列化
+    const plainParams = JSON.parse(JSON.stringify(params));
+
+    console.log('Input data:', {
+      width: input.width,
+      height: input.height,
+      rgba: input.rgba.byteLength,
+      params: plainParams
+    });
+
     // 调用Worker处理
-    const resultData = await workerInstance!.api.runPipeline(input, params);
+    const resultData = await workerInstance!.api.runPipeline(input, plainParams);
+
+    console.log('Worker result:', resultData);
+    console.log('Show debug:', showDebug.value);
+    console.log('Has pixel art:', !!resultData.pixelArt);
+    if (resultData.pixelArt) {
+      console.log('Pixel art data:', {
+        width: resultData.pixelArt.width,
+        height: resultData.pixelArt.height,
+        upscaleFactor: resultData.pixelArt.upscaleFactor
+      });
+    }
 
     // 保存结果
     result.value = resultData;
 
     // 显示能量图和网格线
     if (showDebug.value) {
+      console.log('Rendering debug image...');
       renderDebugImage();
+    } else {
+      console.log('Debug mode is off, not rendering debug image');
     }
+
+    // 添加调试信息显示当前状态
+    console.log('Current debug mode:', showDebug.value);
 
     // 显示像素画
     if (resultData.pixelArt) {
+      console.log('Rendering pixel art...');
+      // 使用 nextTick 确保 pixelCanvas 元素已渲染
+      await nextTick();
       renderPixelArt();
+    } else {
+      console.log('No pixel art data to render');
     }
 
     $q.notify({
@@ -427,10 +523,16 @@ function renderDebugImage() {
   }
 
   ctx.putImageData(imageData, 0, 0);
+  console.log('Energy image data drawn to canvas');
+
+  // 强制触发 Vue 重新渲染
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises
+  void nextTick();
 
   // 绘制检测到的网格线（红色）
   ctx.strokeStyle = 'red';
   ctx.lineWidth = 1;
+  console.log('Starting to draw grid lines...');
 
   for (const x of xLines) {
     ctx.beginPath();
@@ -470,6 +572,7 @@ function renderDebugImage() {
 
   // 绘制网格中心点（绿色）
   ctx.fillStyle = 'green';
+  console.log('Starting to draw grid center points...');
   for (let i = 0; i < allXLines.length - 1; i++) {
     const x = (allXLines[i]! + allXLines[i + 1]!) / 2;
     for (let j = 0; j < allYLines.length - 1; j++) {
@@ -477,6 +580,11 @@ function renderDebugImage() {
       ctx.fillRect(x - 1, y - 1, 2, 2);
     }
   }
+  console.log('Debug image rendering completed');
+
+  // 再次强制触发 Vue 重新渲染，确保 UI 更新
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises
+  void nextTick();
 }
 
 // 渲染像素画

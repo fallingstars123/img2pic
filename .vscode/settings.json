@@ -21,6 +21,7 @@
         "pypi",
         "scikit",
         "scipy",
+        "sirrus",
         "sobel"
     ]
 }
