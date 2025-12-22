@@ -2,7 +2,7 @@ name = "img2pic-web"
 main = "workers-site/index.js"
 compatibility_date = "2024-01-01"
 compatibility_flags = ["nodejs_compat"]
-build = { command = "npm run build:cf", cwd = "." }
+build = { command = "npm run build:cf && cd workers-site && npm install", cwd = "." }
 
 [env.production]
 name = "img2pic-web-prod"
