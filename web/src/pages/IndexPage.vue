@@ -185,3 +185,71 @@ import { ref } from 'vue';
 const showFeatures = ref(false);
 const step = ref(1);
 </script>
+
+<style scoped>
+/* Dark mode adjustments */
+.body--dark .bg-grey-1 {
+  background: var(--bg-secondary) !important;
+}
+
+.body--dark .text-grey-7 {
+  color: var(--text-secondary) !important;
+}
+
+.body--dark .q-card {
+  background: var(--card-bg);
+  border-color: var(--border-color);
+}
+
+/* q-stepper 深色模式适配 */
+.body--dark .q-stepper {
+  background: transparent;
+}
+
+.body--dark .q-stepper__tab {
+  color: var(--text-primary);
+}
+
+.body--dark .q-stepper__title {
+  color: var(--text-primary);
+}
+
+.body--dark .q-stepper__step-content {
+  color: var(--text-secondary);
+}
+
+.body--dark .q-stepper__step-inner {
+  color: var(--text-secondary);
+}
+
+.body--dark .q-stepper__dot {
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+.body--dark .q-stepper__line {
+  background: var(--border-color);
+}
+
+.body--dark .q-stepper__tab--active .q-stepper__dot {
+  background: var(--primary);
+  color: white;
+}
+
+.body--dark .q-stepper__tab--active .q-stepper__title {
+  color: var(--primary);
+}
+
+.body--dark .q-stepper__tab--done .q-stepper__dot {
+  background: var(--positive);
+  color: white;
+}
+
+.body--dark .q-stepper__tab--done .q-stepper__title {
+  color: var(--positive);
+}
+
+.body--dark .q-stepper__tab .q-icon {
+  color: inherit;
+}
+</style>

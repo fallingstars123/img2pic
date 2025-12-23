@@ -1601,4 +1601,164 @@ function openImagePreview(canvas: HTMLCanvasElement | null, imageName: string) {
     width: 100%;
   }
 }
+
+/* Dark mode adjustments */
+.body--dark .text-grey-7 {
+  color: var(--text-secondary) !important;
+}
+
+.body--dark .text-grey-6 {
+  color: var(--text-tertiary) !important;
+}
+
+.body--dark .bg-grey-2 {
+  background: var(--bg-secondary) !important;
+}
+
+.body--dark .text-grey-8 {
+  color: var(--text-primary) !important;
+}
+
+.body--dark .q-card {
+  background: var(--card-bg);
+  border-color: var(--border-color);
+}
+
+.body--dark .pixel-art-result {
+  background: repeating-conic-gradient(var(--checkered-bg-light) 0 25%, transparent 0 50%) 0 0 / 20px 20px !important;
+}
+
+.body--dark .q-banner.bg-grey-2 {
+  background: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+}
+
+/* q-select 下拉菜单深色模式适配 */
+.body--dark :deep(.q-menu) {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+}
+
+.body--dark :deep(.q-menu .q-item) {
+  color: var(--text-primary);
+}
+
+.body--dark :deep(.q-menu .q-item:hover) {
+  background: var(--bg-tertiary);
+}
+
+.body--dark :deep(.q-select__dropdown-option) {
+  color: var(--text-primary);
+}
+
+/* q-file 组件深色模式适配 */
+.body--dark :deep(.q-field__control) {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.body--dark :deep(.q-field__label) {
+  color: var(--text-secondary);
+}
+
+.body--dark :deep(.q-field--outlined .q-field__control:before) {
+  border-color: var(--border-color);
+}
+
+/* q-slider 深色模式适配 */
+.body--dark :deep(.q-slider__track) {
+  background: var(--bg-tertiary);
+}
+
+/* q-file 组件深色模式适配 */
+.body--dark :deep(.q-file) {
+  background: var(--bg-secondary);
+}
+
+.body--dark :deep(.q-file .q-field__control) {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.body--dark :deep(.q-file .q-field__native) {
+  color: var(--text-primary);
+}
+
+.body--dark :deep(.q-file .q-field__label) {
+  color: var(--text-secondary);
+}
+
+.body--dark :deep(.q-file .q-field__prepend) {
+  color: var(--text-primary);
+}
+
+.body--dark :deep(.q-file__fill) {
+  background: var(--bg-tertiary);
+}
+
+/* q-select 下拉菜单深色模式适配 */
+.body--dark :deep(.q-select) {
+  background: var(--bg-secondary);
+}
+
+.body--dark :deep(.q-select .q-field__control) {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.body--dark :deep(.q-select .q-field__native) {
+  color: var(--text-primary);
+}
+
+.body--dark :deep(.q-select .q-field__label) {
+  color: var(--text-secondary);
+}
+
+.body--dark :deep(.q-select .q-field__append) {
+  color: var(--text-primary);
+}
+
+.body--dark :deep(.q-select .q-field__marginal) {
+  color: var(--text-primary);
+}
+
+/* 下拉选项列表样式 */
+.body--dark :deep(.q-menu) {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+}
+
+.body--dark :deep(.q-menu .q-item) {
+  color: var(--text-primary);
+  background: transparent;
+}
+
+.body--dark :deep(.q-menu .q-item:hover) {
+  background: var(--bg-tertiary);
+}
+
+.body--dark :deep(.q-menu .q-item.q-item--active) {
+  background: var(--bg-tertiary);
+}
+
+.body--dark :deep(.q-menu .q-item-label) {
+  color: var(--text-primary);
+}
+
+/* 下拉选项被选中状态 */
+.body--dark :deep(.q-virtual-list__content) {
+  background: var(--card-bg);
+}
+
+.body--dark :deep(.q-select__dropdown-option) {
+  color: var(--text-primary);
+}
+
+.body--dark :deep(.q-select__dropdown-option--selected) {
+  background: var(--bg-tertiary);
+}
+
+.body--dark :deep(.q-select__dropdown-option:hover) {
+  background: var(--bg-tertiary);
+}
 </style>

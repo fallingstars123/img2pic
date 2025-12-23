@@ -222,5 +222,13 @@ export default {
       'ar': 'العربية',
       'hi': 'हिन्दी'
     }
+  },
+
+  // Cambio tema
+  theme: {
+    title: 'Tema',
+    light: 'Modalità Chiara',
+    dark: 'Modalità Scura',
+    auto: 'Segui Sistema'
   }
 };

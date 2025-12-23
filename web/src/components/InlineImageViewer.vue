@@ -514,18 +514,18 @@ watch(
   left: 0;
   right: 0;
   bottom: 0;
-  border: 1px solid var(--vscode-border);
+  border: 1px solid var(--border-color);
   border-radius: 0;
   overflow: hidden;
   /* 棋盘格背景用于显示透明区域 */
   background-image:
-    linear-gradient(45deg, #f0f0f0 25%, transparent 25%),
-    linear-gradient(-45deg, #f0f0f0 25%, transparent 25%),
-    linear-gradient(45deg, transparent 75%, #f0f0f0 75%),
-    linear-gradient(-45deg, transparent 75%, #f0f0f0 75%);
+    linear-gradient(45deg, var(--checkered-bg-light) 25%, transparent 25%),
+    linear-gradient(-45deg, var(--checkered-bg-light) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, var(--checkered-bg-light) 75%),
+    linear-gradient(-45deg, transparent 75%, var(--checkered-bg-light) 75%);
   background-size: 10px 10px;
   background-position: 0 0, 0 5px, 5px -5px, -5px 0px;
-  background-color: white;
+  background-color: var(--checkered-bg-dark);
   z-index: 1;
 }
 
@@ -568,16 +568,16 @@ watch(
   align-items: center;
   padding: 4px 6px;
   border-radius: 8px;
-  background: var(--vscode-sideBar-background);
+  background: var(--toolbar-bg);
   backdrop-filter: blur(10px);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px var(--shadow-color);
   z-index: 10;
-  border: 1px solid var(--vscode-border);
+  border: 1px solid var(--border-color);
 }
 
 .scale-indicator {
   font-size: 12px;
-  color: var(--vscode-muted);
+  color: var(--text-secondary);
 }
 
 /* 底部信息栏 */
@@ -589,18 +589,18 @@ watch(
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: var(--vscode-muted);
+  color: var(--text-secondary);
   font-size: 12px;
   padding: 6px 8px;
   border-radius: 8px;
-  background: var(--vscode-sideBar-background);
+  background: var(--toolbar-bg);
   backdrop-filter: blur(10px);
-  border: 1px solid var(--vscode-border);
+  border: 1px solid var(--border-color);
   z-index: 10;
 }
 
 .file-name {
-  color: var(--vscode-text);
+  color: var(--text-primary);
   font-weight: 600;
   max-width: 60%;
   white-space: nowrap;

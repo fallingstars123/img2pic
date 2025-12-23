@@ -169,3 +169,40 @@ async function onPreloadWasm() {
   updateState();
 }
 </script>
+
+<style scoped>
+/* Dark mode adjustments for banners */
+.body--dark .q-banner {
+  background: var(--bg-secondary) !important;
+  border: 1px solid var(--border-color);
+}
+
+.body--dark .q-banner.bg-warning {
+  background: rgba(242, 192, 55, 0.2) !important;
+  color: #f2c037 !important;
+}
+
+.body--dark .q-banner.bg-info {
+  background: rgba(49, 204, 236, 0.2) !important;
+  color: #31ccec !important;
+}
+
+.body--dark .q-banner.bg-positive {
+  background: rgba(33, 186, 69, 0.2) !important;
+  color: #21ba45 !important;
+}
+
+.body--dark .q-banner.bg-negative {
+  background: rgba(193, 0, 21, 0.2) !important;
+  color: #ff6b6b !important;
+}
+
+.body--dark .q-banner.bg-grey-8 {
+  background: var(--bg-secondary) !important;
+  color: var(--text-secondary) !important;
+}
+
+.body--dark .text-grey {
+  color: var(--text-secondary) !important;
+}
+</style>

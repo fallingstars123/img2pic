@@ -1,5 +1,6 @@
 interface StorageSettings {
   language?: string;
+  theme?: 'light' | 'dark' | 'auto';
   pixelSettings?: {
     gaussianBlur: number;
     gapTolerance: number;
@@ -75,6 +76,19 @@ class StorageService {
   loadPixelSettings(): StorageSettings['pixelSettings'] | undefined {
     const settings = this.loadSettings();
     return settings.pixelSettings;
+  }
+
+  saveTheme(theme: 'light' | 'dark' | 'auto'): void {
+    const currentSettings = this.loadSettings();
+    this.saveSettings({
+      ...currentSettings,
+      theme
+    });
+  }
+
+  loadTheme(): 'light' | 'dark' | 'auto' | null {
+    const settings = this.loadSettings();
+    return settings.theme || null;
   }
 
   clearSettings(): void {

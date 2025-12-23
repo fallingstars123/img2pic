@@ -222,5 +222,13 @@ export default {
       'ar': 'العربية',
       'hi': 'हिन्दी'
     }
+  },
+
+  // Themenumschaltung
+  theme: {
+    title: 'Thema',
+    light: 'Hell',
+    dark: 'Dunkel',
+    auto: 'System folgen'
   }
 };

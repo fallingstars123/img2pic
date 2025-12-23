@@ -5,8 +5,8 @@
     </q-item-section>
 
     <q-item-section>
-      <q-item-label>{{ title }}</q-item-label>
-      <q-item-label caption>{{ caption }}</q-item-label>
+      <q-item-label class="nav-title">{{ title }}</q-item-label>
+      <q-item-label caption class="nav-caption">{{ caption }}</q-item-label>
     </q-item-section>
   </q-item>
 </template>
@@ -25,3 +25,32 @@ withDefaults(defineProps<EssentialLinkProps>(), {
   icon: '',
 });
 </script>
+
+<style scoped>
+/* EssentialLink 深色模式适配 */
+.nav-title {
+  color: var(--text-primary);
+}
+
+.nav-caption {
+  color: var(--text-secondary);
+}
+
+:deep(.q-icon) {
+  color: var(--text-primary);
+}
+
+/* 深色模式 */
+.body--dark .nav-title {
+  color: var(--text-primary) !important;
+}
+
+.body--dark .nav-caption {
+  color: var(--text-secondary) !important;
+  opacity: 0.8;
+}
+
+.body--dark :deep(.q-icon) {
+  color: var(--text-primary);
+}
+</style>

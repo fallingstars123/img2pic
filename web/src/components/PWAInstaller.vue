@@ -13,7 +13,7 @@
 
     <!-- PWA Install Prompt -->
     <q-dialog v-model="showInstallPrompt" persistent>
-      <q-card style="min-width: 350px">
+      <q-card style="min-width: 350px" class="theme-card">
         <q-card-section class="row items-center">
           <q-avatar
             icon="apps"
@@ -23,14 +23,14 @@
           />
           <div class="q-ml-md">
             <div class="text-h6">安装 img2pic 应用</div>
-            <div class="text-body2 text-grey-7">
+            <div class="text-body2 theme-text-secondary">
               将 img2pic 安装到您的设备，随时随地使用像素画转换功能！
             </div>
           </div>
         </q-card-section>
 
         <q-card-section class="text-body2">
-          <ul class="q-pl-md">
+          <ul class="q-pl-md theme-text-primary">
             <li>离线使用，无需网络连接</li>
             <li>全屏体验，更专注的工作环境</li>
             <li>启动更快，即开即用</li>
@@ -42,7 +42,6 @@
           <q-btn
             flat
             label="以后再说"
-            color="grey"
             @click="dismissInstallPrompt"
             v-close-popup
           />
@@ -59,7 +58,7 @@
 
     <!-- Update Available Dialog -->
     <q-dialog v-model="showUpdateDialog" persistent>
-      <q-card style="min-width: 350px">
+      <q-card style="min-width: 350px" class="theme-card">
         <q-card-section class="row items-center">
           <q-avatar
             icon="system_update"
@@ -69,7 +68,7 @@
           />
           <div class="q-ml-md">
             <div class="text-h6">新版本可用</div>
-            <div class="text-body2 text-grey-7">
+            <div class="text-body2 theme-text-secondary">
               img2pic 有新版本更新，包含改进和新功能！
             </div>
           </div>
@@ -79,7 +78,6 @@
           <q-btn
             flat
             label="稍后更新"
-            color="grey"
             @click="dismissUpdate"
             v-close-popup
           />
@@ -97,7 +95,7 @@
     <!-- Offline Notification -->
     <q-banner
       v-if="isOffline"
-      class="bg-warning text-white"
+      class="offline-banner"
       dense
     >
       <template v-slot:avatar>
@@ -498,5 +496,36 @@ onUnmounted(() => {
 <style scoped>
 .q-banner {
   margin-bottom: 8px;
+}
+
+/* Theme-aware styles */
+.theme-card {
+  background: var(--card-bg);
+}
+
+.theme-text-primary {
+  color: var(--text-primary);
+}
+
+.theme-text-secondary {
+  color: var(--text-secondary);
+}
+
+.offline-banner {
+  background: var(--warning);
+  color: white;
+}
+
+/* Dark mode overrides */
+.body--dark .theme-card {
+  background: var(--card-bg);
+}
+
+.body--dark .theme-text-primary {
+  color: var(--text-primary);
+}
+
+.body--dark .theme-text-secondary {
+  color: var(--text-secondary);
 }
 </style>
