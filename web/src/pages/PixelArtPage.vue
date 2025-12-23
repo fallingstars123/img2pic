@@ -4,8 +4,9 @@
     <div class="horizontal-layout">
       <!-- 左侧控制面板 -->
       <div class="control-panel">
-        <q-card>
-          <q-card-section>
+        <q-card class="control-panel-card">
+          <q-card-section class="q-pa-none">
+            <div class="control-panel-content">
             <div class="text-h6 q-mb-md">{{ $t('title.pixelSettings') }}</div>
 
             <!-- 文件上传 -->
@@ -703,6 +704,7 @@
                 <div v-if="renderTimings.debug" class="q-mb-xs">调试图: {{ renderTimings.debug.toFixed(2) }}ms</div>
                 <div v-if="renderTimings.pixelArt" class="q-mb-xs">像素画: {{ renderTimings.pixelArt.toFixed(2) }}ms</div>
               </div>
+            </div>
             </div>
           </q-card-section>
         </q-card>
@@ -2103,6 +2105,36 @@ function downloadEdgeDetectPixelArt() {
   flex: 0 0 35%;
   min-width: 350px;
   max-width: 400px;
+  /* 设置最大高度：100vh - header(50px) - page padding上下(32px) - 一些额外边距 */
+  max-height: calc(100vh - 50px - 32px - 8px);
+  /* 让控制面板卡片占满高度 */
+  display: flex;
+  flex-direction: column;
+}
+
+.control-panel-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.control-panel .q-pa-none {
+  flex: 1;
+  padding: 0 !important;
+  overflow: hidden;
+}
+
+.control-panel-content {
+  padding: 16px;
+  height: 100%;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #888 #f1f1f1;
+}
+
+/* 深色模式滚动条颜色 */
+.body--dark .control-panel-content {
+  scrollbar-color: #666 #2a2a2a;
 }
 
 .image-display-area {
@@ -2192,6 +2224,22 @@ function downloadEdgeDetectPixelArt() {
     flex: 1;
     max-width: none;
     min-width: auto;
+    max-height: none; /* 禁用最大高度 */
+  }
+
+  .control-panel-card {
+    height: auto; /* 卡片高度自适应 */
+    display: block; /* 取消 flex 布局 */
+  }
+
+  .control-panel .q-pa-none {
+    flex: none;
+    overflow: visible; /* 允许内容溢出 */
+  }
+
+  .control-panel-content {
+    height: auto; /* 内容高度自适应 */
+    overflow-y: visible; /* 禁用内部滚动 */
   }
 
   .image-grid {
@@ -2365,5 +2413,40 @@ function downloadEdgeDetectPixelArt() {
 
 .body--dark :deep(.q-select__dropdown-option:hover) {
   background: var(--bg-tertiary);
+}
+</style>
+
+<!-- 非 scoped 样式：用于 Webkit 滚动条样式 -->
+<style>
+/* 控制面板滚动条样式 - 针对 .control-panel-content */
+.control-panel-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.control-panel-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.control-panel-content::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.control-panel-content::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* 深色模式滚动条样式 */
+.body--dark .control-panel-content::-webkit-scrollbar-track {
+  background: #2a2a2a;
+}
+
+.body--dark .control-panel-content::-webkit-scrollbar-thumb {
+  background: #666;
+}
+
+.body--dark .control-panel-content::-webkit-scrollbar-thumb:hover {
+  background: #888;
 }
 </style>
