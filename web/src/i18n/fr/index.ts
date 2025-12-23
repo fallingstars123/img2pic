@@ -135,6 +135,8 @@ export default {
     title: 'Mode d\'échantillonnage',
     energyMode: 'Mode d\'algorithme d\'énergie',
     energyModeDesc: 'Utiliser l\'algorithme d\'énergie pour la pixelisation, prend en charge plusieurs méthodes d\'échantillonnage',
+    edgeDetectMode: 'Mode de détection des bords',
+    edgeDetectModeDesc: 'Identifier automatiquement les grilles de pixels par détection des bords, prend en charge les ajustements fins',
     directSamplingMode: 'Échantillonnage Proportionnel Direct',
     directSamplingModeDesc: 'Échantillonnage proportionnel direct de la grille pour générer du pixel art',
     pureUpscaleMode: 'Upscale Pur',
@@ -159,6 +161,38 @@ export default {
     weightedRatioDesc: 'Ratio de pondération du point central lors de l\'échantillonnage moyen pondéré, plus la valeur est élevée, plus le pixel central est privilégié',
     directSamplingParams: 'Paramètres d\'échantillonnage direct',
     directSamplingDescription: 'Le mode d\'échantillonnage direct convient pour convertir des images normales en pixel art. La taille des pixels doit être définie manuellement.'
+  },
+
+  // Paramètres du mode de détection des bords
+  edgeDetect: {
+    title: 'Paramètres de détection des bords',
+    edgeThreshold: 'Seuil de détection des bords',
+    edgeThresholdDesc: 'Les valeurs plus basses détectent plus de bords, les valeurs plus hautes détectent moins de bords',
+    minGridSize: 'Taille de grille minimale',
+    minGridSizeDesc: 'Taille de grille de pixels minimale détectée',
+    maxGridSize: 'Taille de grille maximale',
+    maxGridSizeDesc: 'Taille de grille de pixels maximale détectée',
+    manualPixelSize: 'Taille de pixel manuelle',
+    manualPixelSizeDesc: 'Définir sur 0 pour la détection automatique, sinon utilise une taille fixe',
+    gridPosition: 'Ajustement fin de la position de la grille',
+    offsetX: 'Décalage horizontal (X)',
+    offsetXDesc: 'Ajuster finement la position horizontale de la grille, supporte les pas décimaux',
+    offsetY: 'Décalage vertical (Y)',
+    offsetYDesc: 'Ajuster finement la position verticale de la grille, supporte les pas décimaux',
+    showRealtimePreview: 'Afficher l\'aperçu en temps réel (superposition de grille)',
+    showRealtimePreviewDesc: 'Afficher les lignes de grille détectées sur l\'image originale en temps réel',
+    sampleSettings: 'Paramètres d\'échantillonnage',
+    sampleMode: 'Mode d\'échantillonnage',
+    sampleModeDesc: 'Choisir la méthode d\'échantillonnage pour chaque cellule de la grille',
+    weightRatio: 'Ratio de pondération',
+    weightRatioDesc: 'Ratio de pondération pour la zone d\'échantillonnage',
+    useNativeRes: 'Utiliser la résolution native (1 pixel = 1 grille)',
+    useNativeResDesc: 'Sortir un pixel par cellule de grille, sans mise à l\'échelle',
+    pixelSize: 'Taille de pixel',
+    sampleGrid: 'Grille d\'échantillonnage',
+    gridPreview: 'Aperçu de grille (temps réel)',
+    pixelatedResult: 'Résultat pixelisé',
+    downloadPixelArt: 'Télécharger le pixel art'
   },
 
   // Boutons d'action

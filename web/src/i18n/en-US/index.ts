@@ -79,6 +79,8 @@ export default {
     title: 'Sampling Mode',
     energyMode: 'Energy Algorithm Mode',
     energyModeDesc: 'Use energy algorithm for pixelization, supports multiple sampling methods',
+    edgeDetectMode: 'Edge Detection Mode',
+    edgeDetectModeDesc: 'Automatically identify pixel grids through edge detection with fine adjustments',
     directSamplingMode: 'Direct Proportional Sampling',
     directSamplingModeDesc: 'Direct proportional grid sampling to generate pixel art',
     pureUpscaleMode: 'Pure Upscale',
@@ -103,6 +105,38 @@ export default {
     weightedRatioDesc: 'Center point weight ratio for weighted average sampling, higher values emphasize center pixels more',
     directSamplingParams: 'Direct Sampling Parameters',
     directSamplingDescription: 'Direct sampling mode is suitable for converting normal images to pixel art. Pixel size needs to be set manually.'
+  },
+
+  // Edge detection mode parameters
+  edgeDetect: {
+    title: 'Edge Detection Parameters',
+    edgeThreshold: 'Edge Detection Threshold',
+    edgeThresholdDesc: 'Lower values detect more edges, higher values detect fewer edges',
+    minGridSize: 'Minimum Grid Size',
+    minGridSizeDesc: 'Minimum detected pixel grid size',
+    maxGridSize: 'Maximum Grid Size',
+    maxGridSizeDesc: 'Maximum detected pixel grid size',
+    manualPixelSize: 'Manual Pixel Size',
+    manualPixelSizeDesc: 'Set to 0 for auto-detection, otherwise uses fixed size',
+    gridPosition: 'Grid Position Fine-tuning',
+    offsetX: 'Horizontal Offset (X)',
+    offsetXDesc: 'Fine-tune the horizontal position of the grid, supports decimal steps',
+    offsetY: 'Vertical Offset (Y)',
+    offsetYDesc: 'Fine-tune the vertical position of the grid, supports decimal steps',
+    showRealtimePreview: 'Show Real-time Preview (Grid Overlay)',
+    showRealtimePreviewDesc: 'Display detected grid lines over the original image in real-time',
+    sampleSettings: 'Sampling Settings',
+    sampleMode: 'Sampling Mode',
+    sampleModeDesc: 'Choose the sampling method for each grid cell',
+    weightRatio: 'Weight Ratio',
+    weightRatioDesc: 'Weight ratio for the sampling area',
+    useNativeRes: 'Use Native Resolution (1 pixel = 1 grid)',
+    useNativeResDesc: 'Output one pixel per grid cell, no scaling applied',
+    pixelSize: 'Pixel Size',
+    sampleGrid: 'Sample Grid',
+    gridPreview: 'Grid Preview (Real-time)',
+    pixelatedResult: 'Pixelated Result',
+    downloadPixelArt: 'Download Pixel Art'
   },
 
   // Action buttons

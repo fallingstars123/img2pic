@@ -135,6 +135,8 @@ export default {
     title: '採樣模式',
     energyMode: '能量算法模式',
     energyModeDesc: '用能量算法行像素化，支持多種採樣方式',
+    edgeDetectMode: '邊緣檢測模式',
+    edgeDetectModeDesc: '以邊緣檢測自識像素網格，支持微調',
     directSamplingMode: '直接按比例採樣',
     directSamplingModeDesc: '直接按比例網格採樣，生像素畫',
     pureUpscaleMode: '純比例放大',
@@ -159,6 +161,38 @@ export default {
     weightedRatioDesc: '加權平均採樣時中心點權重比例，值大則重中心像素',
     directSamplingParams: '直接採樣參數',
     directSamplingDescription: '直接採樣模式適合將普通圖像轉換為像素藝術，需要手動設置像素大小。'
+  },
+
+  // 邊緣檢測模式參數
+  edgeDetect: {
+    title: '邊緣檢測參數',
+    edgeThreshold: '邊緣檢測閾值',
+    edgeThresholdDesc: '值低檢邊多，值高檢邊少',
+    minGridSize: '最小網格大小',
+    minGridSizeDesc: '檢得最小像素網格大小',
+    maxGridSize: '最大網格大小',
+    maxGridSizeDesc: '檢得最大像素網格大小',
+    manualPixelSize: '手動像素大小',
+    manualPixelSizeDesc: '設為0則自檢，否則用定值',
+    gridPosition: '網格位置微調',
+    offsetX: '橫向偏移 (X)',
+    offsetXDesc: '微調網格橫向位置，可小數步進',
+    offsetY: '縱向偏移 (Y)',
+    offsetYDesc: '微調網格縱向位置，可小數步進',
+    showRealtimePreview: '顯示實時預覽（網格覆蓋）',
+    showRealtimePreviewDesc: '於原圖上實時顯示檢得網格線',
+    sampleSettings: '採樣設置',
+    sampleMode: '採樣模式',
+    sampleModeDesc: '擇每格內之採樣方式',
+    weightRatio: '權重比例',
+    weightRatioDesc: '採樣區權重比例',
+    useNativeRes: '用原生解像度（1像素=1格）',
+    useNativeResDesc: '每格出一像素，不放大',
+    pixelSize: '像素大小',
+    sampleGrid: '採樣網格',
+    gridPreview: '網格預覽（實時）',
+    pixelatedResult: '像素化結果',
+    downloadPixelArt: '下載像素畫'
   },
 
   // 操作按鈕

@@ -79,6 +79,8 @@ export default {
     title: 'Abtastmodus',
     energyMode: 'Energiealgorithmus-Modus',
     energyModeDesc: 'Energiealgorithmus für Pixelisierung verwenden, unterstützt mehrere Abtastmethoden',
+    edgeDetectMode: 'Kantenerkennungsmodus',
+    edgeDetectModeDesc: 'Pixelgitter automatisch durch Kantenerkennung identifizieren, unterstützt Feinabstimmung',
     directSamplingMode: 'Direkte Proportionale Abtastung',
     directSamplingModeDesc: 'Direkte proportionale Gitterabtastung zur Generierung von Pixel-Art',
     pureUpscaleMode: 'Reines Upscaling',
@@ -103,6 +105,38 @@ export default {
     weightedRatioDesc: 'Gewichtsverhältnis des Mittelpunkts für gewichtete Durchschnittsabtastung, höhere Werte betonen Mittelpixel stärker',
     directSamplingParams: 'Parameter der direkten Abtastung',
     directSamplingDescription: 'Der Direktabtastmodus eignet sich für die Umwandlung normaler Bilder in Pixel-Art. Die Pixelgröße muss manuell eingestellt werden.'
+  },
+
+  // Edge detection mode parameters
+  edgeDetect: {
+    title: 'Kantenerkennungsparameter',
+    edgeThreshold: 'Kantenerkennungsschwelle',
+    edgeThresholdDesc: 'Niedrigere Werte erkennen mehr Kanten, höhere Werte erkennen weniger Kanten',
+    minGridSize: 'Minimale Gittergröße',
+    minGridSizeDesc: 'Minimal erkannte Pixelgittergröße',
+    maxGridSize: 'Maximale Gittergröße',
+    maxGridSizeDesc: 'Maximal erkannte Pixelgittergröße',
+    manualPixelSize: 'Manuelle Pixelgröße',
+    manualPixelSizeDesc: 'Auf 0 setzen für automatische Erkennung, andernfalls feste Größe verwenden',
+    gridPosition: 'Feinjustierung der Gitterposition',
+    offsetX: 'Horizontaler Versatz (X)',
+    offsetXDesc: 'Horizontalposition des Gitters feinjustieren, unterstützt Dezimalschritte',
+    offsetY: 'Vertikaler Versatz (Y)',
+    offsetYDesc: 'Vertikalposition des Gitters feinjustieren, unterstützt Dezimalschritte',
+    showRealtimePreview: 'Echtzeitvorschau anzeigen (Gitterüberlagerung)',
+    showRealtimePreviewDesc: 'Erkannte Gitterlinien in Echtzeit über dem Originalbild anzeigen',
+    sampleSettings: 'Abtasteinstellungen',
+    sampleMode: 'Abtastmodus',
+    sampleModeDesc: 'Abtastmethode für jede Gitterzelle wählen',
+    weightRatio: 'Gewichtungsverhältnis',
+    weightRatioDesc: 'Gewichtungsverhältnis für den Abtastbereich',
+    useNativeRes: 'Native Auflösung verwenden (1 Pixel = 1 Gitter)',
+    useNativeResDesc: 'Ein Pixel pro Gitterzelle ausgeben, keine Skalierung angewendet',
+    pixelSize: 'Pixelgröße',
+    sampleGrid: 'Abtastgitter',
+    gridPreview: 'Gittervorschau (Echtzeit)',
+    pixelatedResult: 'Pixelisiertes Ergebnis',
+    downloadPixelArt: 'Pixel-Art herunterladen'
   },
 
   // Action buttons

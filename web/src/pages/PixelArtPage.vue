@@ -78,7 +78,7 @@
             <!-- 边缘检测模式参数 (仅在边缘检测模式下显示) -->
             <q-expansion-item
               v-if="processingMode === 'edgeDetect'"
-              label="边缘检测参数"
+              :label="$t('edgeDetect.title')"
               default-opened
               class="q-mb-md"
             >
@@ -86,9 +86,9 @@
                 <!-- 边缘检测阈值 -->
                 <div class="q-mb-md">
                   <div class="text-body2 q-mb-sm">
-                    边缘检测阈值: {{ edgeDetectParams.edgeThreshold.toFixed(2) }}
+                    {{ $t('edgeDetect.edgeThreshold') }}: {{ edgeDetectParams.edgeThreshold.toFixed(2) }}
                     <q-icon name="help" size="xs" color="primary" class="cursor-pointer">
-                      <q-tooltip>越低检测到的边缘越多，越高检测到的边缘越少</q-tooltip>
+                      <q-tooltip>{{ $t('edgeDetect.edgeThresholdDesc') }}</q-tooltip>
                     </q-icon>
                   </div>
                   <q-slider
@@ -104,9 +104,9 @@
                 <!-- 网格大小范围 -->
                 <div class="q-mb-md">
                   <div class="text-body2 q-mb-sm">
-                    最小网格大小: {{ edgeDetectParams.minGridSize }}px
+                    {{ $t('edgeDetect.minGridSize') }}: {{ edgeDetectParams.minGridSize }}px
                     <q-icon name="help" size="xs" color="primary" class="cursor-pointer">
-                      <q-tooltip>检测到的最小像素网格大小</q-tooltip>
+                      <q-tooltip>{{ $t('edgeDetect.minGridSizeDesc') }}</q-tooltip>
                     </q-icon>
                   </div>
                   <q-slider
@@ -121,9 +121,9 @@
 
                 <div class="q-mb-md">
                   <div class="text-body2 q-mb-sm">
-                    最大网格大小: {{ edgeDetectParams.maxGridSize }}px
+                    {{ $t('edgeDetect.maxGridSize') }}: {{ edgeDetectParams.maxGridSize }}px
                     <q-icon name="help" size="xs" color="primary" class="cursor-pointer">
-                      <q-tooltip>检测到的最大像素网格大小</q-tooltip>
+                      <q-tooltip>{{ $t('edgeDetect.maxGridSizeDesc') }}</q-tooltip>
                     </q-icon>
                   </div>
                   <q-slider
@@ -139,9 +139,9 @@
                 <!-- 手动像素大小（当自动检测失败时使用） -->
                 <div class="q-mb-md">
                   <div class="text-body2 q-mb-sm">
-                    手动像素大小: {{ edgeDetectParams.pixelSize > 0 ? edgeDetectParams.pixelSize + 'px' : '自动检测' }}
+                    {{ $t('edgeDetect.manualPixelSize') }}: {{ edgeDetectParams.pixelSize > 0 ? edgeDetectParams.pixelSize + 'px' : $t('pixelParams.autoDetect') }}
                     <q-icon name="help" size="xs" color="primary" class="cursor-pointer">
-                      <q-tooltip>设置为0时自动检测，否则使用固定大小</q-tooltip>
+                      <q-tooltip>{{ $t('edgeDetect.manualPixelSizeDesc') }}</q-tooltip>
                     </q-icon>
                   </div>
                   <q-slider
@@ -155,13 +155,13 @@
                 </div>
 
                 <!-- 网格偏移（用于微调） -->
-                <div class="text-subtitle2 q-mb-md">网格位置微调</div>
+                <div class="text-subtitle2 q-mb-md">{{ $t('edgeDetect.gridPosition') }}</div>
 
                 <div class="q-mb-md">
                   <div class="text-body2 q-mb-sm">
-                    水平偏移 (X): {{ edgeDetectParams.offsetX.toFixed(2) }}px
+                    {{ $t('edgeDetect.offsetX') }}: {{ edgeDetectParams.offsetX.toFixed(2) }}px
                     <q-icon name="help" size="xs" color="primary" class="cursor-pointer">
-                      <q-tooltip>微调网格的水平位置，支持小数步进</q-tooltip>
+                      <q-tooltip>{{ $t('edgeDetect.offsetXDesc') }}</q-tooltip>
                     </q-icon>
                   </div>
                   <q-slider
@@ -177,9 +177,9 @@
 
                 <div class="q-mb-md">
                   <div class="text-body2 q-mb-sm">
-                    垂直偏移 (Y): {{ edgeDetectParams.offsetY.toFixed(2) }}px
+                    {{ $t('edgeDetect.offsetY') }}: {{ edgeDetectParams.offsetY.toFixed(2) }}px
                     <q-icon name="help" size="xs" color="primary" class="cursor-pointer">
-                      <q-tooltip>微调网格的垂直位置，支持小数步进</q-tooltip>
+                      <q-tooltip>{{ $t('edgeDetect.offsetYDesc') }}</q-tooltip>
                     </q-icon>
                   </div>
                   <q-slider
@@ -196,9 +196,9 @@
                 <!-- 放大倍数 -->
                 <div class="q-mb-md">
                   <div class="text-body2 q-mb-sm">
-                    放大倍数: {{ edgeDetectParams.upscale }}x
+                    {{ $t('samplingMode.upscaleFactor') }}: {{ edgeDetectParams.upscale }}x
                     <q-icon name="help" size="xs" color="primary" class="cursor-pointer">
-                      <q-tooltip>输出图像的放大倍数</q-tooltip>
+                      <q-tooltip>{{ $t('samplingMode.upscaleFactorDesc') }}</q-tooltip>
                     </q-icon>
                   </div>
                   <q-slider
@@ -212,13 +212,13 @@
                 </div>
 
                 <!-- 采样模式选择 -->
-                <div class="text-subtitle2 q-mb-md">采样设置</div>
+                <div class="text-subtitle2 q-mb-md">{{ $t('edgeDetect.sampleSettings') }}</div>
 
                 <div class="q-mb-md">
                   <div class="text-body2 q-mb-sm">
-                    采样模式
+                    {{ $t('edgeDetect.sampleMode') }}
                     <q-icon name="help" size="xs" color="primary" class="cursor-pointer">
-                      <q-tooltip>选择每个网格内的采样方式</q-tooltip>
+                      <q-tooltip>{{ $t('edgeDetect.sampleModeDesc') }}</q-tooltip>
                     </q-icon>
                   </div>
                   <q-select
@@ -232,9 +232,9 @@
                 <!-- 权重比例（仅在 weighted 模式下显示） -->
                 <div v-if="edgeDetectParams.sampleMode === 'weighted'" class="q-mb-md">
                   <div class="text-body2 q-mb-sm">
-                    权重比例: {{ edgeDetectParams.sampleWeightRatio.toFixed(1) }}
+                    {{ $t('edgeDetect.weightRatio') }}: {{ edgeDetectParams.sampleWeightRatio.toFixed(1) }}
                     <q-icon name="help" size="xs" color="primary" class="cursor-pointer">
-                      <q-tooltip>采样区域的权重比例</q-tooltip>
+                      <q-tooltip>{{ $t('edgeDetect.weightRatioDesc') }}</q-tooltip>
                     </q-icon>
                   </div>
                   <q-slider
@@ -254,9 +254,9 @@
                 >
                   <template v-slot:default>
                     <span class="flex items-center">
-                      使用原生分辨率（1像素=1网格）
+                      {{ $t('edgeDetect.useNativeRes') }}
                       <q-icon name="help" size="xs" color="primary" class="cursor-pointer q-ml-xs">
-                        <q-tooltip>每个网格输出一个像素，不进行放大</q-tooltip>
+                        <q-tooltip>{{ $t('edgeDetect.useNativeResDesc') }}</q-tooltip>
                       </q-icon>
                     </span>
                   </template>
@@ -270,9 +270,9 @@
                 >
                   <template v-slot:default>
                     <span class="flex items-center">
-                      显示实时预览（网格覆盖）
+                      {{ $t('edgeDetect.showRealtimePreview') }}
                       <q-icon name="help" size="xs" color="primary" class="cursor-pointer q-ml-xs">
-                        <q-tooltip>在原图上实时显示检测到的网格线</q-tooltip>
+                        <q-tooltip>{{ $t('edgeDetect.showRealtimePreviewDesc') }}</q-tooltip>
                       </q-icon>
                     </span>
                   </template>
@@ -757,13 +757,13 @@
           <div v-if="showEdgeDetectPreview && processingMode === 'edgeDetect'" class="image-card">
             <q-card>
               <q-card-section>
-                <div class="text-h6 q-mb-md">网格预览（实时）</div>
+                <div class="text-h6 q-mb-md">{{ $t('edgeDetect.gridPreview') }}</div>
                 <div class="text-center">
-                  <canvas ref="edgeDetectPreviewCanvas" class="image-canvas" style="max-width: 100%; height: auto; cursor: pointer;" @click="openImagePreview(edgeDetectPreviewCanvas, '网格预览')" />
+                  <canvas ref="edgeDetectPreviewCanvas" class="image-canvas" style="max-width: 100%; height: auto; cursor: pointer;" @click="openImagePreview(edgeDetectPreviewCanvas, $t('edgeDetect.gridPreview'))" />
                 </div>
                 <div v-if="edgeDetectResult" class="text-body2 text-grey-7 q-mt-md">
-                  <div>像素大小: {{ edgeDetectResult.pixelSize }}px</div>
-                  <div>采样网格: {{ edgeDetectResult.vLines.length - 1 }} × {{ edgeDetectResult.hLines.length - 1 }}</div>
+                  <div>{{ $t('edgeDetect.pixelSize') }}: {{ edgeDetectResult.pixelSize }}px</div>
+                  <div>{{ $t('edgeDetect.sampleGrid') }}: {{ edgeDetectResult.vLines.length - 1 }} × {{ edgeDetectResult.hLines.length - 1 }}</div>
                 </div>
               </q-card-section>
             </q-card>
@@ -773,15 +773,15 @@
           <div v-if="edgeDetectResult && processingMode === 'edgeDetect'" class="image-card">
             <q-card>
               <q-card-section>
-                <div class="text-h6 q-mb-md">像素化结果</div>
+                <div class="text-h6 q-mb-md">{{ $t('edgeDetect.pixelatedResult') }}</div>
                 <div class="text-center">
-                  <canvas ref="pixelCanvas" class="image-canvas" style="max-width: 100%; height: auto; cursor: pointer;" @click="openImagePreview(pixelCanvas, '像素化结果')" />
+                  <canvas ref="pixelCanvas" class="image-canvas" style="max-width: 100%; height: auto; cursor: pointer;" @click="openImagePreview(pixelCanvas, $t('edgeDetect.pixelatedResult'))" />
                 </div>
                 <!-- 下载按钮组 -->
                 <div class="download-buttons">
                   <q-btn
                     color="secondary"
-                    label="下载像素画"
+                    :label="$t('edgeDetect.downloadPixelArt')"
                     @click="downloadEdgeDetectPixelArt"
                     icon="download"
                     class="download-btn"

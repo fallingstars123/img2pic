@@ -135,6 +135,8 @@ export default {
     title: '采样模式',
     energyMode: '能量算法模式',
     energyModeDesc: '使用能量算法进行像素化处理，支持多种采样方式',
+    edgeDetectMode: '边缘检测模式',
+    edgeDetectModeDesc: '通过边缘检测自动识别像素网格，支持精细调整',
     directSamplingMode: '直接按比例采样',
     directSamplingModeDesc: '直接按比例网格采样，生成像素画',
     pureUpscaleMode: '纯比例放大',
@@ -159,6 +161,38 @@ export default {
     weightedRatioDesc: '加权平均采样时的中心点权重比例，值越大越重视中心像素',
     directSamplingParams: '直接采样参数',
     directSamplingDescription: '直接采样模式适用于普通图片转换为像素画。需要手动设置像素大小。'
+  },
+
+  // 边缘检测模式参数
+  edgeDetect: {
+    title: '边缘检测参数',
+    edgeThreshold: '边缘检测阈值',
+    edgeThresholdDesc: '越低检测到的边缘越多，越高检测到的边缘越少',
+    minGridSize: '最小网格大小',
+    minGridSizeDesc: '检测到的最小像素网格大小',
+    maxGridSize: '最大网格大小',
+    maxGridSizeDesc: '检测到的最大像素网格大小',
+    manualPixelSize: '手动像素大小',
+    manualPixelSizeDesc: '设置为0时自动检测，否则使用固定大小',
+    gridPosition: '网格位置微调',
+    offsetX: '水平偏移 (X)',
+    offsetXDesc: '微调网格的水平位置，支持小数步进',
+    offsetY: '垂直偏移 (Y)',
+    offsetYDesc: '微调网格的垂直位置，支持小数步进',
+    showRealtimePreview: '显示实时预览（网格覆盖）',
+    showRealtimePreviewDesc: '在原图上实时显示检测到的网格线',
+    sampleSettings: '采样设置',
+    sampleMode: '采样模式',
+    sampleModeDesc: '选择每个网格内的采样方式',
+    weightRatio: '权重比例',
+    weightRatioDesc: '采样区域的权重比例',
+    useNativeRes: '使用原生分辨率（1像素=1网格）',
+    useNativeResDesc: '每个网格输出一个像素，不进行放大',
+    pixelSize: '像素大小',
+    sampleGrid: '采样网格',
+    gridPreview: '网格预览（实时）',
+    pixelatedResult: '像素化结果',
+    downloadPixelArt: '下载像素画'
   },
 
   // 操作按钮

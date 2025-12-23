@@ -372,3 +372,55 @@ function toggleLeftDrawer() {
   color: var(--text-secondary);
 }
 </style>
+
+<style>
+/* 下拉菜单滚动条样式 */
+.q-menu .q-virtual-scroll__content,
+.q-menu .q-scrollarea__content {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(128, 128, 128, 0.5) rgba(0, 0, 0, 0.1);
+}
+
+.q-menu .q-virtual-scroll__content::-webkit-scrollbar,
+.q-menu .q-scrollarea__content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.q-menu .q-virtual-scroll__content::-webkit-scrollbar-track,
+.q-menu .q-scrollarea__content::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
+}
+
+.q-menu .q-virtual-scroll__content::-webkit-scrollbar-thumb,
+.q-menu .q-scrollarea__content::-webkit-scrollbar-thumb {
+  background: rgba(128, 128, 128, 0.5);
+  border-radius: 4px;
+}
+
+.q-menu .q-virtual-scroll__content::-webkit-scrollbar-thumb:hover,
+.q-menu .q-scrollarea__content::-webkit-scrollbar-thumb:hover {
+  background: rgba(128, 128, 128, 0.7);
+}
+
+/* 深色模式下的滚动条样式 */
+.body--dark .q-menu .q-virtual-scroll__content,
+.body--dark .q-menu .q-scrollarea__content {
+  scrollbar-color: rgba(200, 200, 200, 0.4) rgba(255, 255, 255, 0.05);
+}
+
+.body--dark .q-menu .q-virtual-scroll__content::-webkit-scrollbar-track,
+.body--dark .q-menu .q-scrollarea__content::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.body--dark .q-menu .q-virtual-scroll__content::-webkit-scrollbar-thumb,
+.body--dark .q-menu .q-scrollarea__content::-webkit-scrollbar-thumb {
+  background: rgba(200, 200, 200, 0.4);
+}
+
+.body--dark .q-menu .q-virtual-scroll__content::-webkit-scrollbar-thumb:hover,
+.body--dark .q-menu .q-scrollarea__content::-webkit-scrollbar-thumb:hover {
+  background: rgba(200, 200, 200, 0.6);
+}
+</style>

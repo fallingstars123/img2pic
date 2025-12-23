@@ -79,6 +79,8 @@ export default {
     title: 'Modalità Campionamento',
     energyMode: 'Modalità Algoritmo Energia',
     energyModeDesc: 'Usa algoritmo energia per pixelizzazione, supporta più metodi di campionamento',
+    edgeDetectMode: 'Modalità Rilevamento Bordi',
+    edgeDetectModeDesc: 'Identifica automaticamente le griglie di pixel mediante rilevamento bordi, supporta regolazioni precise',
     directSamplingMode: 'Campionamento Proporzionale Diretto',
     directSamplingModeDesc: 'Campionamento proporzionale diretto griglia per generare arte pixel',
     pureUpscaleMode: 'Upscaling Puro',
@@ -103,6 +105,38 @@ export default {
     weightedRatioDesc: 'Rapporto peso punto centrale per campionamento media ponderata, valori più alti enfatizzano di più i pixel centrali',
     directSamplingParams: 'Parametri Campionamento Diretto',
     directSamplingDescription: 'La modalità campionamento diretto è adatta per convertire immagini normali in arte pixel. La dimensione pixel deve essere impostata manualmente.'
+  },
+
+  // Parametri modalità rilevamento bordi
+  edgeDetect: {
+    title: 'Parametri Rilevamento Bordi',
+    edgeThreshold: 'Soglia Rilevamento Bordi',
+    edgeThresholdDesc: 'Valori più bassi rilevano più bordi, valori più alti rilevano meno bordi',
+    minGridSize: 'Dimensione Griglia Minima',
+    minGridSizeDesc: 'Dimensione minima griglia pixel rilevata',
+    maxGridSize: 'Dimensione Griglia Massima',
+    maxGridSizeDesc: 'Dimensione massima griglia pixel rilevata',
+    manualPixelSize: 'Dimensione Pixel Manuale',
+    manualPixelSizeDesc: 'Imposta su 0 per rilevamento automatico, altrimenti usa dimensione fissa',
+    gridPosition: 'Regolazione Fine Posizione Griglia',
+    offsetX: 'Offset Orizzontale (X)',
+    offsetXDesc: 'Regola finemente la posizione orizzontale della griglia, supporta passi decimali',
+    offsetY: 'Offset Verticale (Y)',
+    offsetYDesc: 'Regola finemente la posizione verticale della griglia, supporta passi decimali',
+    showRealtimePreview: 'Mostra Anteprima Tempo Reale (Sovrapposizione Griglia)',
+    showRealtimePreviewDesc: 'Mostra le linee della griglia rilevate sull\'immagine originale in tempo reale',
+    sampleSettings: 'Impostazioni Campionamento',
+    sampleMode: 'Modalità Campionamento',
+    sampleModeDesc: 'Scegli il metodo di campionamento per ogni cella della griglia',
+    weightRatio: 'Rapporto Pesi',
+    weightRatioDesc: 'Rapporto pesi per l\'area di campionamento',
+    useNativeRes: 'Usa Risoluzione Nativa (1 pixel = 1 griglia)',
+    useNativeResDesc: 'Genera un pixel per cella griglia, senza scalatura',
+    pixelSize: 'Dimensione Pixel',
+    sampleGrid: 'Griglia Campionamento',
+    gridPreview: 'Anteprima Griglia (Tempo Reale)',
+    pixelatedResult: 'Risultato Pixelizzato',
+    downloadPixelArt: 'Scarica Pixel Art'
   },
 
   // Action buttons

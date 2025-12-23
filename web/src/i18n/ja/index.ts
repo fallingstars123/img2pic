@@ -135,6 +135,8 @@ export default {
     title: 'サンプリングモード',
     energyMode: 'エネルギーアルゴリズムモード',
     energyModeDesc: 'エネルギーアルゴリズムを使用してピクセル化処理を行います。複数のサンプリング方式をサポート',
+    edgeDetectMode: 'エッジ検出モード',
+    edgeDetectModeDesc: 'エッジ検出によりピクセルグリッドを自動識別し、微調整をサポート',
     directSamplingMode: '直接比例サンプリング',
     directSamplingModeDesc: '直接比例グリッドサンプリングでピクセルアートを生成',
     pureUpscaleMode: '純粋拡大',
@@ -159,6 +161,38 @@ export default {
     weightedRatioDesc: '加重平均サンプリング時の中心点重み比率、値が大きいほど中心ピクセルを重視します',
     directSamplingParams: '直接サンプリングパラメータ',
     directSamplingDescription: '直接サンプリングモードは、通常の画像をピクセルアートに変換する場合に適しています。ピクセルサイズを手動で設定する必要があります。'
+  },
+
+  // エッジ検出モードパラメータ
+  edgeDetect: {
+    title: 'エッジ検出パラメータ',
+    edgeThreshold: 'エッジ検出閾値',
+    edgeThresholdDesc: '低いほど多くのエッジを検出し、高いほど少ないエッジを検出します',
+    minGridSize: '最小グリッドサイズ',
+    minGridSizeDesc: '検出される最小ピクセルグリッドサイズ',
+    maxGridSize: '最大グリッドサイズ',
+    maxGridSizeDesc: '検出される最大ピクセルグリッドサイズ',
+    manualPixelSize: '手動ピクセルサイズ',
+    manualPixelSizeDesc: '0に設定すると自動検出、それ以外は固定サイズを使用',
+    gridPosition: 'グリッド位置の微調整',
+    offsetX: '水平オフセット (X)',
+    offsetXDesc: 'グリッドの水平位置を微調整、小数ステップをサポート',
+    offsetY: '垂直オフセット (Y)',
+    offsetYDesc: 'グリッドの垂直位置を微調整、小数ステップをサポート',
+    showRealtimePreview: 'リアルタイムプレビューを表示（グリッドオーバーレイ）',
+    showRealtimePreviewDesc: '元の画像上に検出されたグリッド線をリアルタイムで表示',
+    sampleSettings: 'サンプリング設定',
+    sampleMode: 'サンプリングモード',
+    sampleModeDesc: '各グリッドセルのサンプリング方法を選択',
+    weightRatio: '重み比率',
+    weightRatioDesc: 'サンプリング領域の重み比率',
+    useNativeRes: 'ネイティブ解像度を使用（1ピクセル=1グリッド）',
+    useNativeResDesc: '各グリッドセルから1ピクセルを出力、拡大なし',
+    pixelSize: 'ピクセルサイズ',
+    sampleGrid: 'サンプリンググリッド',
+    gridPreview: 'グリッドプレビュー（リアルタイム）',
+    pixelatedResult: 'ピクセル化結果',
+    downloadPixelArt: 'ピクセルアートをダウンロード'
   },
 
   // 操作ボタン

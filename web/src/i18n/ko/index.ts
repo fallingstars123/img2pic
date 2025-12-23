@@ -79,6 +79,8 @@ export default {
     title: '샘플링 모드',
     energyMode: '에너지 알고리즘 모드',
     energyModeDesc: '픽셀화를 위해 에너지 알고리즘 사용, 여러 샘플링 방법 지원',
+    edgeDetectMode: '엣지 감지 모드',
+    edgeDetectModeDesc: '엣지 감지를 통해 픽셀 그리드를 자동으로 식별하고 미세 조정을 지원',
     directSamplingMode: '직접 비례 샘플링',
     directSamplingModeDesc: '픽셀 아트를 생성하기 위한 직접 비례 그리드 샘플링',
     pureUpscaleMode: '순수 업스케일',
@@ -103,6 +105,38 @@ export default {
     weightedRatioDesc: '가중 평균 샘플링을 위한 중심점 가중 비율로, 값이 높을수록 중심 픽셀을 더 강조합니다.',
     directSamplingParams: '직접 샘플링 매개변수',
     directSamplingDescription: '직접 샘플링 모드는 일반 이미지를 픽셀 아트로 변환하는 데 적합합니다. 픽셀 크기를 수동으로 설정해야 합니다.'
+  },
+
+  // 엣지 감지 모드 매개변수
+  edgeDetect: {
+    title: '엣지 감지 매개변수',
+    edgeThreshold: '엣지 감지 임계값',
+    edgeThresholdDesc: '값이 낮을수록 더 많은 엣지를 감지하고, 값이 높을수록 더 적은 엣지를 감지합니다',
+    minGridSize: '최소 그리드 크기',
+    minGridSizeDesc: '감지된 최소 픽셀 그리드 크기',
+    maxGridSize: '최대 그리드 크기',
+    maxGridSizeDesc: '감지된 최대 픽셀 그리드 크기',
+    manualPixelSize: '수동 픽셀 크기',
+    manualPixelSizeDesc: '자동 감지를 위해 0으로 설정, 그렇지 않으면 고정 크기 사용',
+    gridPosition: '그리드 위치 미세 조정',
+    offsetX: '수평 오프셋 (X)',
+    offsetXDesc: '그리드의 수평 위치를 미세 조정, 소수점 단계 지원',
+    offsetY: '수직 오프셋 (Y)',
+    offsetYDesc: '그리드의 수직 위치를 미세 조정, 소수점 단계 지원',
+    showRealtimePreview: '실시간 미리보기 표시 (그리드 오버레이)',
+    showRealtimePreviewDesc: '원본 이미지 위에 감지된 그리드 라인을 실시간으로 표시',
+    sampleSettings: '샘플링 설정',
+    sampleMode: '샘플링 모드',
+    sampleModeDesc: '각 그리드 셀의 샘플링 방법 선택',
+    weightRatio: '가중치 비율',
+    weightRatioDesc: '샘플링 영역의 가중치 비율',
+    useNativeRes: '네이티브 해상도 사용 (1 픽셀 = 1 그리드)',
+    useNativeResDesc: '각 그리드 셀당 하나의 픽셀을 출력, 스케일링 없음',
+    pixelSize: '픽셀 크기',
+    sampleGrid: '샘플 그리드',
+    gridPreview: '그리드 미리보기 (실시간)',
+    pixelatedResult: '픽셀화된 결과',
+    downloadPixelArt: '픽셀 아트 다운로드'
   },
 
   // Action buttons

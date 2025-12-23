@@ -79,6 +79,8 @@ export default {
     title: 'Modo de Amostragem',
     energyMode: 'Modo de Algoritmo de Energia',
     energyModeDesc: 'Usar algoritmo de energia para pixelização, suporta múltiplos métodos de amostragem',
+    edgeDetectMode: 'Modo de Detecção de Bordas',
+    edgeDetectModeDesc: 'Identificar automaticamente grades de pixels através de detecção de bordas, suporta ajustes finos',
     directSamplingMode: 'Amostragem Proporcional Direta',
     directSamplingModeDesc: 'Amostragem proporcional direta de grade para gerar arte pixel',
     pureUpscaleMode: 'Upscale Puro',
@@ -103,6 +105,38 @@ export default {
     weightedRatioDesc: 'Razão de peso do ponto central para amostragem de média ponderada, valores mais altos enfatizam mais os pixels centrais',
     directSamplingParams: 'Parâmetros de Amostragem Direta',
     directSamplingDescription: 'O modo de amostragem direta é adequado para converter imagens normais em arte pixel. O tamanho do pixel precisa ser definido manualmente.'
+  },
+
+  // Parâmetros do modo de detecção de bordas
+  edgeDetect: {
+    title: 'Parâmetros de Detecção de Bordas',
+    edgeThreshold: 'Limiar de Detecção de Bordas',
+    edgeThresholdDesc: 'Valores mais baixos detectam mais bordas, valores mais altos detectam menos bordas',
+    minGridSize: 'Tamanho Mínimo de Grade',
+    minGridSizeDesc: 'Tamanho mínimo de grade de pixels detectada',
+    maxGridSize: 'Tamanho Máximo de Grade',
+    maxGridSizeDesc: 'Tamanho máximo de grade de pixels detectada',
+    manualPixelSize: 'Tamanho de Pixel Manual',
+    manualPixelSizeDesc: 'Defina como 0 para detecção automática, caso contrário usa tamanho fixo',
+    gridPosition: 'Ajuste Fino da Posição da Grade',
+    offsetX: 'Offset Horizontal (X)',
+    offsetXDesc: 'Ajustar finamente a posição horizontal da grade, suporta passos decimais',
+    offsetY: 'Offset Vertical (Y)',
+    offsetYDesc: 'Ajustar finamente a posição vertical da grade, suporta passos decimais',
+    showRealtimePreview: 'Mostrar Visualização em Tempo Real (Sobreposição de Grade)',
+    showRealtimePreviewDesc: 'Exibir linhas de grade detectadas sobre a imagem original em tempo real',
+    sampleSettings: 'Configurações de Amostragem',
+    sampleMode: 'Modo de Amostragem',
+    sampleModeDesc: 'Escolha o método de amostragem para cada célula da grade',
+    weightRatio: 'Razão de Peso',
+    weightRatioDesc: 'Razão de peso para a área de amostragem',
+    useNativeRes: 'Usar Resolução Nativa (1 pixel = 1 grade)',
+    useNativeResDesc: 'Produzir um pixel por célula da grade, sem escalonamento',
+    pixelSize: 'Tamanho do Pixel',
+    sampleGrid: 'Grade de Amostragem',
+    gridPreview: 'Visualização da Grade (Tempo Real)',
+    pixelatedResult: 'Resultado Pixelizado',
+    downloadPixelArt: 'Baixar Arte Pixel'
   },
 
   // Action buttons

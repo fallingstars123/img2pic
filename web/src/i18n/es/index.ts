@@ -79,6 +79,8 @@ export default {
     title: 'Modo de Muestreo',
     energyMode: 'Modo de Algoritmo de Energía',
     energyModeDesc: 'Usar algoritmo de energía para pixelización, soporta múltiples métodos de muestreo',
+    edgeDetectMode: 'Modo de Detección de Bordes',
+    edgeDetectModeDesc: 'Identificar automáticamente las cuadrículas de píxeles mediante detección de bordes, soporta ajustes finos',
     directSamplingMode: 'Muestreo Proporcional Directo',
     directSamplingModeDesc: 'Muestreo proporcional directo de cuadrícula para generar arte píxel',
     pureUpscaleMode: 'Escalado Puro',
@@ -103,6 +105,38 @@ export default {
     weightedRatioDesc: 'Relación de peso del punto central para muestreo de promedio ponderado, valores más altos enfatizan más los píxeles centrales',
     directSamplingParams: 'Parámetros de Muestreo Directo',
     directSamplingDescription: 'El modo de muestreo directo es adecuado para convertir imágenes normales a arte píxel. El tamaño de píxel necesita ser configurado manualmente.'
+  },
+
+  // Edge detection mode parameters
+  edgeDetect: {
+    title: 'Parámetros de Detección de Bordes',
+    edgeThreshold: 'Umbral de Detección de Bordes',
+    edgeThresholdDesc: 'Valores más bajos detectan más bordes, valores más altos detectan menos bordes',
+    minGridSize: 'Tamaño Mínimo de Cuadrícula',
+    minGridSizeDesc: 'Tamaño mínimo de cuadrícula de píxeles detectada',
+    maxGridSize: 'Tamaño Máximo de Cuadrícula',
+    maxGridSizeDesc: 'Tamaño máximo de cuadrícula de píxeles detectada',
+    manualPixelSize: 'Tamaño de Píxel Manual',
+    manualPixelSizeDesc: 'Establecer en 0 para detección automática, de lo contrario usa tamaño fijo',
+    gridPosition: 'Ajuste Fino de Posición de Cuadrícula',
+    offsetX: 'Desplazamiento Horizontal (X)',
+    offsetXDesc: 'Ajustar finamente la posición horizontal de la cuadrícula, soporta pasos decimales',
+    offsetY: 'Desplazamiento Vertical (Y)',
+    offsetYDesc: 'Ajustar finamente la posición vertical de la cuadrícula, soporta pasos decimales',
+    showRealtimePreview: 'Mostrar Vista Previa en Tiempo Real (Superposición de Cuadrícula)',
+    showRealtimePreviewDesc: 'Mostrar líneas de cuadrícula detectadas sobre la imagen original en tiempo real',
+    sampleSettings: 'Configuración de Muestreo',
+    sampleMode: 'Modo de Muestreo',
+    sampleModeDesc: 'Elegir el método de muestreo para cada celda de cuadrícula',
+    weightRatio: 'Relación de Peso',
+    weightRatioDesc: 'Relación de peso para el área de muestreo',
+    useNativeRes: 'Usar Resolución Nativa (1 píxel = 1 cuadrícula)',
+    useNativeResDesc: 'Generar un píxel por celda de cuadrícula, sin escalado aplicado',
+    pixelSize: 'Tamaño de Píxel',
+    sampleGrid: 'Cuadrícula de Muestreo',
+    gridPreview: 'Vista Previa de Cuadrícula (Tiempo Real)',
+    pixelatedResult: 'Resultado Pixelado',
+    downloadPixelArt: 'Descargar Arte Píxel'
   },
 
   // Action buttons

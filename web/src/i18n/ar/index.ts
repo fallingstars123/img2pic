@@ -79,6 +79,8 @@ export default {
     title: 'وضع العينات',
     energyMode: 'وضع خوارزمية الطاقة',
     energyModeDesc: 'استخدام خوارزمية الطاقة للبكسلة، يدعم طرق العينات المتعددة',
+    edgeDetectMode: 'وضع كشف الحواف',
+    edgeDetectModeDesc: 'تحديد شبكات البكسل تلقائيًا عبر كشف الحواف، يدعم التعديلات الدقيقة',
     directSamplingMode: 'العيّنات النسبية المباشرة',
     directSamplingModeDesc: 'عيّنات الشبكة النسبية المباشرة لتوليد فن البكسل',
     pureUpscaleMode: 'التحجيم النقي',
@@ -103,6 +105,38 @@ export default {
     weightedRatioDesc: 'نسبة وزن نقطة المركز لعينات المتوسط الموزون، القيم الأعلى تؤكد على البكسلات المركزية أكثر',
     directSamplingParams: 'معلمات العينات المباشرة',
     directSamplingDescription: 'وضع العينات المباشر مناسب لتحويل الصور العادية إلى فن البكسل. يجب ضبط حجم البكسل يدويًا.'
+  },
+
+  // معلمات وضع كشف الحواف
+  edgeDetect: {
+    title: 'معلمات كشف الحواف',
+    edgeThreshold: 'عتب كشف الحواف',
+    edgeThresholdDesc: 'القيم الأقل تكشف المزيد من الحواف، القيم الأعلى تكشف حواف أقل',
+    minGridSize: 'الحد الأدنى لحجم الشبكة',
+    minGridSizeDesc: 'الحد الأدنى لحجم شبكة البكسل المكتشف',
+    maxGridSize: 'الحد الأقصى لحجم الشبكة',
+    maxGridSizeDesc: 'الحد الأقصى لحجم شبكة البكسل المكتشف',
+    manualPixelSize: 'حجم البكسل اليدوي',
+    manualPixelSizeDesc: 'ضبط على 0 للكشف التلقائي، وإلا يستخدم حجم ثابت',
+    gridPosition: 'الضبط الدقيق لموضع الشبكة',
+    offsetX: 'الإزاحة الأفقية (X)',
+    offsetXDesc: 'ضبط الموضع الأفقي للشبكة بدقة، يدعم الخطوات العشرية',
+    offsetY: 'الإزاحة الرأسية (Y)',
+    offsetYDesc: 'ضبط الموضع الرأسي للشبكة بدقة، يدعم الخطوات العشرية',
+    showRealtimePreview: 'إظهار المعاينة المباشرة (تداخل الشبكة)',
+    showRealtimePreviewDesc: 'عرض خطوط الشبكة المكتشفة فوق الصورة الأصلية في الوقت الفعلي',
+    sampleSettings: 'إعدادات العينات',
+    sampleMode: 'وضع العينات',
+    sampleModeDesc: 'اختر طريقة العينات لكل خلية شبكة',
+    weightRatio: 'نسبة الوزن',
+    weightRatioDesc: 'نسبة الوزن لمنطقة العينات',
+    useNativeRes: 'استخدم الدقة الأصلية (1 بكسل = 1 شبكة)',
+    useNativeResDesc: 'إخراج بكسل واحد لكل خلية شبكة، بدون تحجيم',
+    pixelSize: 'حجم البكسل',
+    sampleGrid: 'شبكة العينات',
+    gridPreview: 'معاينة الشبكة (الوقت الفعلي)',
+    pixelatedResult: 'النتيجة البكسلية',
+    downloadPixelArt: 'تنزيل فن البكسل'
   },
 
   // Action buttons

@@ -148,6 +148,8 @@ export default {
     title: '抽出方式',
     energyMode: 'エネルギー算法模式',
     energyModeDesc: 'エネルギー算法ヲ用イテ画素化処理ヲ行イマス。複数ノ抽出方式ニ対応',
+    edgeDetectMode: '輪郭検出模式',
+    edgeDetectModeDesc: '輪郭検出ニテ画素格子ヲ自動識別シ、微調整ヲ支援',
     directSamplingMode: '直接比例抽出',
     directSamplingModeDesc: '直接比例格子抽出ニテ画素芸術ヲ生成',
     pureUpscaleMode: '純粋拡大',
@@ -178,7 +180,39 @@ export default {
       '加重平均時の中心重み比率です。値が大きいほど中心画素を重視します。',
     directSamplingParams: '直接抽出参数',
     directSamplingDescription:
-      '直接抽出方式は通常画像の画素芸術変換に適します。画素寸法は手動設定が必要です。'
+      '直接抽出方式ハ通常画像ノ画素芸術変換ニ適シマス。画素寸法ハ手動設定ガ必要デス。'
+  },
+
+  // 輪郭検出模式參數
+  edgeDetect: {
+    title: '輪郭検出參數',
+    edgeThreshold: '輪郭検出閾値',
+    edgeThresholdDesc: '値低キバ輪郭多ク検出シ、値高キバ少ナク検出シマス',
+    minGridSize: '最小格子寸法',
+    minGridSizeDesc: '検出シタ最小画素格子寸法',
+    maxGridSize: '最大格子寸法',
+    maxGridSizeDesc: '検出シタ最大画素格子寸法',
+    manualPixelSize: '手动画素寸法',
+    manualPixelSizeDesc: '自動検出ニハ0ヲ設定、其他ハ固定寸法ヲ使用',
+    gridPosition: '格子位置微調整',
+    offsetX: '水平偏移 (X)',
+    offsetXDesc: '格子ノ水平位置ヲ微調整シマス、小数歩進ニ対応',
+    offsetY: '垂直偏移 (Y)',
+    offsetYDesc: '格子ノ垂直位置ヲ微調整シマス、小数歩進ニ対応',
+    showRealtimePreview: '即時預覽表示（格子重畳）',
+    showRealtimePreviewDesc: '原画ノ上ニ検出シタ格子線ヲ実時間表示',
+    sampleSettings: '抽出設定',
+    sampleMode: '抽出模式',
+    sampleModeDesc: '各格子セルノ抽出方法ヲ選択',
+    weightRatio: '重比率',
+    weightRatioDesc: '抽出領域ノ重比率',
+    useNativeRes: '原解像度使用 (1画素=1格子)',
+    useNativeResDesc: '各格子毎ニ一画素出力、拡大無シ',
+    pixelSize: '画素寸法',
+    sampleGrid: '抽出格子',
+    gridPreview: '格子預覽（実時間）',
+    pixelatedResult: '画素化結果',
+    downloadPixelArt: '画素芸術ダウンロード'
   },
 
   // 操作ボタン
