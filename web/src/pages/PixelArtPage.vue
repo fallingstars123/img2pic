@@ -383,8 +383,9 @@
             <!-- WASM 加速设置 -->
             <WasmSettings />
 
-            <!-- 显示调试信息 -->
+            <!-- 显示调试信息 - 只在能量算法模式下显示 -->
             <q-toggle
+              v-if="!pureUpscaleMode && !useDirectSampling"
               v-model="showDebug"
               class="q-mb-md"
             >
@@ -467,8 +468,8 @@
             </q-card>
           </div>
 
-          <!-- 纯能量图（调试模式） -->
-          <div v-if="showDebug && result" class="image-card">
+          <!-- 纯能量图（调试模式） - 只在能量算法模式下显示 -->
+          <div v-if="showDebug && result && !pureUpscaleMode && !useDirectSampling" class="image-card">
             <q-card>
               <q-card-section>
                 <div class="text-h6 q-mb-md">{{ $t('title.pureEnergyMap') }}</div>
@@ -479,8 +480,8 @@
             </q-card>
           </div>
 
-          <!-- 能量图和网格线（调试模式） -->
-          <div v-if="showDebug && result" class="image-card">
+          <!-- 能量图和网格线（调试模式） - 只在能量算法模式下显示 -->
+          <div v-if="showDebug && result && !pureUpscaleMode && !useDirectSampling" class="image-card">
             <q-card>
               <q-card-section>
                 <div class="text-h6 q-mb-md">{{ $t('title.energyMapWithGrid') }}</div>
@@ -514,7 +515,7 @@
                       @click="downloadEnergy"
                       icon="download"
                       class="download-btn"
-                      v-if="showDebug"
+                      v-if="showDebug && !pureUpscaleMode && !useDirectSampling"
                     />
                     <q-btn
                       color="secondary"
@@ -522,7 +523,7 @@
                       @click="downloadDebug"
                       icon="download"
                       class="download-btn"
-                      v-if="showDebug"
+                      v-if="showDebug && !pureUpscaleMode && !useDirectSampling"
                     />
                     <q-btn
                       color="secondary"
