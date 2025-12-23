@@ -205,8 +205,9 @@ export async function runPipeline(
   let pixelArt: PipelineResult["pixelArt"] = undefined;
   if (params.sample) {
     let upscaleFactor: number;
-    if (params.upscale > 0) upscaleFactor = params.upscale;
-    else if (params.nativeRes) upscaleFactor = 1;
+    // 原生分辨率优先级最高，强制使用 1x
+    if (params.nativeRes) upscaleFactor = 1;
+    else if (params.upscale > 0) upscaleFactor = params.upscale;
     else upscaleFactor = pixelSize || 1;
 
     const nativeRes = upscaleFactor === 1;
