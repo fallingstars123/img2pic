@@ -26,7 +26,7 @@ interface StorageSettings {
     preprocessInterpFactor: number;
     pureUpscaleMode: boolean;
     pureUpscaleFactor: number;
-    processingMode?: 'energy' | 'directSampling' | 'pureUpscale';
+    processingMode?: 'energy' | 'directSampling' | 'pureUpscale' | 'edgeDetect';
   };
 }
 

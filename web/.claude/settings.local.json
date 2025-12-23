@@ -7,7 +7,9 @@
       "Bash(cat:*)",
       "Bash(pnpm build:*)",
       "Bash(cargo tree:*)",
-      "Bash(node scripts/build-wasm.js)"
+      "Bash(node scripts/build-wasm.js)",
+      "Bash(npx vue-tsc:*)",
+      "Bash(npx eslint:*)"
     ]
   }
 }

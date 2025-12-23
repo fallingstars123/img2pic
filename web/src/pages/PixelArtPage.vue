@@ -74,6 +74,211 @@
             <!-- WASM 加速设置 -->
             <WasmSettings />
 
+            <!-- 边缘检测模式参数 (仅在边缘检测模式下显示) -->
+            <q-expansion-item
+              v-if="processingMode === 'edgeDetect'"
+              label="边缘检测参数"
+              default-opened
+              class="q-mb-md"
+            >
+              <q-card flat bordered class="q-pa-md">
+                <!-- 边缘检测阈值 -->
+                <div class="q-mb-md">
+                  <div class="text-body2 q-mb-sm">
+                    边缘检测阈值: {{ edgeDetectParams.edgeThreshold.toFixed(2) }}
+                    <q-icon name="help" size="xs" color="primary" class="cursor-pointer">
+                      <q-tooltip>越低检测到的边缘越多，越高检测到的边缘越少</q-tooltip>
+                    </q-icon>
+                  </div>
+                  <q-slider
+                    v-model="edgeDetectParams.edgeThreshold"
+                    :min="0.01"
+                    :max="0.5"
+                    :step="0.01"
+                    label
+                    class="q-mb-md"
+                  />
+                </div>
+
+                <!-- 网格大小范围 -->
+                <div class="q-mb-md">
+                  <div class="text-body2 q-mb-sm">
+                    最小网格大小: {{ edgeDetectParams.minGridSize }}px
+                    <q-icon name="help" size="xs" color="primary" class="cursor-pointer">
+                      <q-tooltip>检测到的最小像素网格大小</q-tooltip>
+                    </q-icon>
+                  </div>
+                  <q-slider
+                    v-model="edgeDetectParams.minGridSize"
+                    :min="1"
+                    :max="10"
+                    :step="1"
+                    label
+                    class="q-mb-md"
+                  />
+                </div>
+
+                <div class="q-mb-md">
+                  <div class="text-body2 q-mb-sm">
+                    最大网格大小: {{ edgeDetectParams.maxGridSize }}px
+                    <q-icon name="help" size="xs" color="primary" class="cursor-pointer">
+                      <q-tooltip>检测到的最大像素网格大小</q-tooltip>
+                    </q-icon>
+                  </div>
+                  <q-slider
+                    v-model="edgeDetectParams.maxGridSize"
+                    :min="10"
+                    :max="50"
+                    :step="1"
+                    label
+                    class="q-mb-md"
+                  />
+                </div>
+
+                <!-- 手动像素大小（当自动检测失败时使用） -->
+                <div class="q-mb-md">
+                  <div class="text-body2 q-mb-sm">
+                    手动像素大小: {{ edgeDetectParams.pixelSize > 0 ? edgeDetectParams.pixelSize + 'px' : '自动检测' }}
+                    <q-icon name="help" size="xs" color="primary" class="cursor-pointer">
+                      <q-tooltip>设置为0时自动检测，否则使用固定大小</q-tooltip>
+                    </q-icon>
+                  </div>
+                  <q-slider
+                    v-model="edgeDetectParams.pixelSize"
+                    :min="0"
+                    :max="50"
+                    :step="1"
+                    label
+                    class="q-mb-md"
+                  />
+                </div>
+
+                <!-- 网格偏移（用于微调） -->
+                <div class="text-subtitle2 q-mb-md">网格位置微调</div>
+
+                <div class="q-mb-md">
+                  <div class="text-body2 q-mb-sm">
+                    水平偏移 (X): {{ edgeDetectParams.offsetX.toFixed(2) }}px
+                    <q-icon name="help" size="xs" color="primary" class="cursor-pointer">
+                      <q-tooltip>微调网格的水平位置，支持小数步进</q-tooltip>
+                    </q-icon>
+                  </div>
+                  <q-slider
+                    v-model="edgeDetectParams.offsetX"
+                    :min="-10"
+                    :max="10"
+                    :step="0.01"
+                    label
+                    class="q-mb-md"
+                    @change="updateEdgeDetectPreview"
+                  />
+                </div>
+
+                <div class="q-mb-md">
+                  <div class="text-body2 q-mb-sm">
+                    垂直偏移 (Y): {{ edgeDetectParams.offsetY.toFixed(2) }}px
+                    <q-icon name="help" size="xs" color="primary" class="cursor-pointer">
+                      <q-tooltip>微调网格的垂直位置，支持小数步进</q-tooltip>
+                    </q-icon>
+                  </div>
+                  <q-slider
+                    v-model="edgeDetectParams.offsetY"
+                    :min="-10"
+                    :max="10"
+                    :step="0.01"
+                    label
+                    class="q-mb-md"
+                    @change="updateEdgeDetectPreview"
+                  />
+                </div>
+
+                <!-- 放大倍数 -->
+                <div class="q-mb-md">
+                  <div class="text-body2 q-mb-sm">
+                    放大倍数: {{ edgeDetectParams.upscale }}x
+                    <q-icon name="help" size="xs" color="primary" class="cursor-pointer">
+                      <q-tooltip>输出图像的放大倍数</q-tooltip>
+                    </q-icon>
+                  </div>
+                  <q-slider
+                    v-model="edgeDetectParams.upscale"
+                    :min="1"
+                    :max="20"
+                    :step="1"
+                    label
+                    class="q-mb-md"
+                  />
+                </div>
+
+                <!-- 采样模式选择 -->
+                <div class="text-subtitle2 q-mb-md">采样设置</div>
+
+                <div class="q-mb-md">
+                  <div class="text-body2 q-mb-sm">
+                    采样模式
+                    <q-icon name="help" size="xs" color="primary" class="cursor-pointer">
+                      <q-tooltip>选择每个网格内的采样方式</q-tooltip>
+                    </q-icon>
+                  </div>
+                  <q-select
+                    v-model="edgeDetectParams.sampleMode"
+                    :options="sampleModeOptions"
+                    emit-value
+                    map-options
+                  />
+                </div>
+
+                <!-- 权重比例（仅在 weighted 模式下显示） -->
+                <div v-if="edgeDetectParams.sampleMode === 'weighted'" class="q-mb-md">
+                  <div class="text-body2 q-mb-sm">
+                    权重比例: {{ edgeDetectParams.sampleWeightRatio.toFixed(1) }}
+                    <q-icon name="help" size="xs" color="primary" class="cursor-pointer">
+                      <q-tooltip>采样区域的权重比例</q-tooltip>
+                    </q-icon>
+                  </div>
+                  <q-slider
+                    v-model="edgeDetectParams.sampleWeightRatio"
+                    :min="0.1"
+                    :max="0.9"
+                    :step="0.1"
+                    label
+                    class="q-mb-md"
+                  />
+                </div>
+
+                <!-- 原生分辨率 -->
+                <q-toggle
+                  v-model="edgeDetectParams.nativeRes"
+                  class="q-mb-md"
+                >
+                  <template v-slot:default>
+                    <span class="flex items-center">
+                      使用原生分辨率（1像素=1网格）
+                      <q-icon name="help" size="xs" color="primary" class="cursor-pointer q-ml-xs">
+                        <q-tooltip>每个网格输出一个像素，不进行放大</q-tooltip>
+                      </q-icon>
+                    </span>
+                  </template>
+                </q-toggle>
+
+                <!-- 实时预览开关 -->
+                <q-toggle
+                  v-model="showEdgeDetectPreview"
+                  class="q-mb-md"
+                  @update:model-value="updateEdgeDetectPreview"
+                >
+                  <template v-slot:default>
+                    <span class="flex items-center">
+                      显示实时预览（网格覆盖）
+                      <q-icon name="help" size="xs" color="primary" class="cursor-pointer q-ml-xs">
+                        <q-tooltip>在原图上实时显示检测到的网格线</q-tooltip>
+                      </q-icon>
+                    </span>
+                  </template>
+                </q-toggle>
+              </q-card>
+            </q-expansion-item>
+
             <!-- 能量算法参数 (仅在能量算法模式下显示) -->
             <q-expansion-item
               v-if="processingMode === 'energy'"
@@ -546,6 +751,44 @@
             </q-card>
           </div>
 
+          <!-- 边缘检测实时预览（网格覆盖） - 只在边缘检测模式下显示 -->
+          <div v-if="showEdgeDetectPreview && processingMode === 'edgeDetect'" class="image-card">
+            <q-card>
+              <q-card-section>
+                <div class="text-h6 q-mb-md">网格预览（实时）</div>
+                <div class="text-center">
+                  <canvas ref="edgeDetectPreviewCanvas" class="image-canvas" style="max-width: 100%; height: auto; cursor: pointer;" @click="openImagePreview(edgeDetectPreviewCanvas, '网格预览')" />
+                </div>
+                <div v-if="edgeDetectResult" class="text-body2 text-grey-7 q-mt-md">
+                  <div>像素大小: {{ edgeDetectResult.pixelSize }}px</div>
+                  <div>采样网格: {{ edgeDetectResult.vLines.length - 1 }} × {{ edgeDetectResult.hLines.length - 1 }}</div>
+                </div>
+              </q-card-section>
+            </q-card>
+          </div>
+
+          <!-- 边缘检测像素化结果 -->
+          <div v-if="edgeDetectResult && processingMode === 'edgeDetect'" class="image-card">
+            <q-card>
+              <q-card-section>
+                <div class="text-h6 q-mb-md">像素化结果</div>
+                <div class="text-center">
+                  <canvas ref="pixelCanvas" class="image-canvas" style="max-width: 100%; height: auto; cursor: pointer;" @click="openImagePreview(pixelCanvas, '像素化结果')" />
+                </div>
+                <!-- 下载按钮组 -->
+                <div class="download-buttons">
+                  <q-btn
+                    color="secondary"
+                    label="下载像素画"
+                    @click="downloadEdgeDetectPixelArt"
+                    icon="download"
+                    class="download-btn"
+                  />
+                </div>
+              </q-card-section>
+            </q-card>
+          </div>
+
           <!-- 像素化结果 -->
           <div v-if="result && result.pixelArt" class="image-card">
             <q-card>
@@ -625,6 +868,8 @@ import UPNG from 'upng-js';
 import { createPixelWorker } from 'src/pixel/workerApi';
 import { runPipeline } from 'src/pixel/pipeline';
 import type { PipelineParams, PipelineResult } from 'src/pixel/types';
+import { edgeDetectPixelize, sampleWithGrid } from 'src/pixel/edgeDetect';
+import type { EdgeDetectParams, EdgeDetectResult } from 'src/pixel/types';
 import InlineImageViewer from 'src/components/InlineImageViewer.vue';
 import WasmSettings from 'src/components/WasmSettings.vue';
 import { storageService } from 'src/utils/storage';
@@ -641,6 +886,7 @@ const imageLoaded = ref(false);
 const energyCanvas = ref<HTMLCanvasElement | null>(null);
 const debugCanvas = ref<HTMLCanvasElement | null>(null);
 const pixelCanvas = ref<HTMLCanvasElement | null>(null);
+const edgeDetectPreviewCanvas = ref<HTMLCanvasElement | null>(null);
 const processing = ref(false);
 const showDebug = ref(true); // 默认开启调试模式，方便查看能量图和网格线
 const result = ref<PipelineResult | null>(null);
@@ -658,6 +904,7 @@ const originalImageDataUrl = ref('');
 // 能量图和调试图的数据 URL（用于预览）
 const energyImageDataUrl = ref('');
 const debugImageDataUrl = ref('');
+const edgeDetectPreviewDataUrl = ref('');
 
 // 渲染用时
 const renderTimings = ref<{
@@ -677,8 +924,28 @@ const preprocessInterpFactor = ref(1);
 const pureUpscaleMode = ref(false);
 const pureUpscaleFactor = ref(4);
 
+// 边缘检测模式参数
+const edgeDetectParams = reactive<EdgeDetectParams>({
+  edgeThreshold: 0.1,
+  minGridSize: 2,
+  maxGridSize: 20,
+  offsetX: 0,
+  offsetY: 0,
+  pixelSize: 0, // 0 = auto
+  upscale: 4,
+  nativeRes: false,
+  sampleMode: 'center',
+  sampleWeightRatio: 0.6,
+});
+
+// 边缘检测结果
+const edgeDetectResult = ref<EdgeDetectResult | null>(null);
+
+// 实时预览模式（边缘检测）
+const showEdgeDetectPreview = ref(false);
+
 // 处理模式选择器
-type ProcessingMode = 'energy' | 'directSampling' | 'pureUpscale';
+type ProcessingMode = 'energy' | 'directSampling' | 'pureUpscale' | 'edgeDetect';
 
 const processingMode = ref<ProcessingMode>('energy');
 
@@ -687,6 +954,11 @@ const processingModeOptions = computed(() => [
     value: 'energy',
     label: t('samplingMode.energyMode') || '能量算法模式',
     description: t('samplingMode.energyModeDesc') || '使用能量算法进行像素化处理，支持多种采样方式'
+  },
+  {
+    value: 'edgeDetect',
+    label: '边缘检测模式',
+    description: '通过边缘检测自动识别像素网格，支持精细调整'
   },
   {
     value: 'directSampling',
@@ -706,6 +978,10 @@ watch(processingMode, (newMode) => {
     pureUpscaleMode.value = false;
     useDirectSampling.value = false;
     params.sample = true;
+  } else if (newMode === 'edgeDetect') {
+    pureUpscaleMode.value = false;
+    useDirectSampling.value = false;
+    // 边缘检测模式独立处理
   } else if (newMode === 'directSampling') {
     pureUpscaleMode.value = false;
     useDirectSampling.value = true;
@@ -715,6 +991,11 @@ watch(processingMode, (newMode) => {
   } else if (newMode === 'pureUpscale') {
     pureUpscaleMode.value = true;
     useDirectSampling.value = false;
+  }
+
+  // 切换模式时重置边缘检测结果
+  if (newMode !== 'edgeDetect') {
+    edgeDetectResult.value = null;
   }
 });
 
@@ -819,6 +1100,27 @@ watch(
 // Debounce timeout for saving
 let saveTimeout: NodeJS.Timeout | null = null;
 
+// Watch edge detection parameters for real-time preview update
+watch(
+  [
+    () => edgeDetectParams.edgeThreshold,
+    () => edgeDetectParams.pixelSize,
+    () => edgeDetectParams.minGridSize,
+    () => edgeDetectParams.maxGridSize,
+    () => edgeDetectParams.offsetX,
+    () => edgeDetectParams.offsetY,
+  ],
+  () => {
+    // 实时更新预览（当边缘检测模式且预览开启时）
+    if (processingMode.value === 'edgeDetect' && showEdgeDetectPreview.value) {
+      // 清除旧的结果，强制重新检测
+      edgeDetectResult.value = null;
+      void updateEdgeDetectPreview();
+    }
+  },
+  { deep: true }
+);
+
 // Load saved settings on component mount
 onMounted(() => {
   console.log('Component mounted, creating worker');
@@ -899,6 +1201,10 @@ watch(selectedFile, async (file) => {
   // 清空旧的能量图和调试图 data URL
   energyImageDataUrl.value = '';
   debugImageDataUrl.value = '';
+  edgeDetectPreviewDataUrl.value = '';
+
+  // 清空边缘检测结果
+  edgeDetectResult.value = null;
 
   // 先标记为已加载，这样canvas会被渲染
   imageLoaded.value = true;
@@ -950,6 +1256,17 @@ async function processImage() {
   const totalStartTime = performance.now();
 
   try {
+    // 边缘检测模式 - 使用边缘检测算法进行像素化
+    if (processingMode.value === 'edgeDetect') {
+      console.log('[Edge Detect Mode] Running edge detection pixelization');
+      await processEdgeDetectImage();
+      const totalElapsed = performance.now() - totalStartTime;
+      renderTimings.value.total = totalElapsed;
+      renderTimings.value.pixelArt = totalElapsed;
+      console.log(`边缘检测处理完成，用时: ${totalElapsed.toFixed(2)}ms`);
+      return;
+    }
+
     // 纯比例放大模式 - 直接放大，不做任何处理
     if (pureUpscaleMode.value) {
       console.log('[Pure Upscale Mode] Running pure upscale with factor:', pureUpscaleFactor.value);
@@ -1560,6 +1877,12 @@ function openImagePreview(canvas: HTMLCanvasElement | null, imageName: string) {
   if (imageName === t('title.pixelatedResult') && pixelArtDataUrl.value) {
     // 像素画预览，使用已生成的 data URL
     previewImageSrc.value = pixelArtDataUrl.value;
+  } else if (imageName === '像素化结果' && pixelCanvas.value) {
+    // 边缘检测像素化结果预览
+    previewImageSrc.value = pixelCanvas.value.toDataURL('image/png', 1.0);
+  } else if (imageName === '网格预览' && edgeDetectPreviewDataUrl.value) {
+    // 边缘检测网格预览
+    previewImageSrc.value = edgeDetectPreviewDataUrl.value;
   } else if (imageName === t('title.originalImage') && originalImageDataUrl.value) {
     // 原始图片预览，使用保存的高清 data URL（来自原始文件）
     previewImageSrc.value = originalImageDataUrl.value;
@@ -1579,6 +1902,190 @@ function openImagePreview(canvas: HTMLCanvasElement | null, imageName: string) {
 
   previewImageName.value = imageName;
   imagePreviewDialog.value = true;
+}
+
+// ==================== 边缘检测模式相关函数 ====================
+
+/**
+ * 更新边缘检测实时预览
+ */
+function updateEdgeDetectPreview() {
+  if (!originalCanvas.value || processingMode.value !== 'edgeDetect' || !showEdgeDetectPreview.value) {
+    return;
+  }
+
+  // 在下一个 tick 中执行，确保 DOM 已更新
+  void nextTick(() => {
+    renderEdgeDetectPreview();
+  });
+}
+
+/**
+ * 渲染边缘检测实时预览（网格覆盖在原图上）
+ */
+function renderEdgeDetectPreview() {
+  if (!originalCanvas.value || !edgeDetectPreviewCanvas.value) return;
+
+  const ctx = originalCanvas.value.getContext('2d')!;
+  const previewCtx = edgeDetectPreviewCanvas.value.getContext('2d')!;
+
+  const width = originalCanvas.value.width;
+  const height = originalCanvas.value.height;
+
+  // 设置预览画布大小
+  edgeDetectPreviewCanvas.value.width = width;
+  edgeDetectPreviewCanvas.value.height = height;
+
+  // 复制原图到预览画布
+  const imageData = ctx.getImageData(0, 0, width, height);
+  previewCtx.putImageData(imageData, 0, 0);
+
+  // 如果没有边缘检测结果，先执行检测
+  if (!edgeDetectResult.value) {
+    const rgba = imageData.data;
+    const result = edgeDetectPixelize(rgba, width, height, edgeDetectParams);
+    edgeDetectResult.value = result;
+  }
+
+  const edgeResult = edgeDetectResult.value;
+  if (!edgeResult) return;
+
+  const { hLines, vLines, pixelSize } = edgeResult;
+
+  // 绘制垂直网格线（红色）
+  previewCtx.strokeStyle = 'rgba(255, 0, 0, 0.7)';
+  previewCtx.lineWidth = 1;
+  for (const x of vLines) {
+    previewCtx.beginPath();
+    previewCtx.moveTo(x, 0);
+    previewCtx.lineTo(x, height);
+    previewCtx.stroke();
+  }
+
+  // 绘制水平网格线（蓝色）
+  previewCtx.strokeStyle = 'rgba(0, 100, 255, 0.7)';
+  previewCtx.lineWidth = 1;
+  for (const y of hLines) {
+    previewCtx.beginPath();
+    previewCtx.moveTo(0, y);
+    previewCtx.lineTo(width, y);
+    previewCtx.stroke();
+  }
+
+  // 在左上角显示像素大小信息
+  previewCtx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+  previewCtx.fillRect(10, 10, 150, 40);
+  previewCtx.fillStyle = 'white';
+  previewCtx.font = '14px monospace';
+  previewCtx.fillText(`像素大小: ${pixelSize}px`, 20, 35);
+
+  // 保存预览 data URL
+  edgeDetectPreviewDataUrl.value = edgeDetectPreviewCanvas.value.toDataURL('image/png', 1.0);
+}
+
+/**
+ * 处理边缘检测模式的图像
+ */
+async function processEdgeDetectImage() {
+  if (!originalCanvas.value) return;
+
+  processing.value = true;
+
+  try {
+    const ctx = originalCanvas.value.getContext('2d')!;
+    const width = originalCanvas.value.width;
+    const height = originalCanvas.value.height;
+
+    const imageData = ctx.getImageData(0, 0, width, height);
+    const rgba = imageData.data;
+
+    // 执行边缘检测像素化
+    const result = edgeDetectPixelize(rgba, width, height, edgeDetectParams);
+    edgeDetectResult.value = result;
+
+    // 渲染像素化结果
+    await nextTick();
+    renderEdgeDetectPixelArt();
+
+    // 如果启用了预览，也渲染预览
+    if (showEdgeDetectPreview.value) {
+      renderEdgeDetectPreview();
+    }
+
+    $q.notify({
+      type: 'positive',
+      message: '边缘检测处理完成',
+    });
+  } catch (error) {
+    console.error('边缘检测处理错误:', error);
+    $q.notify({
+      type: 'negative',
+      message: '处理失败: ' + String(error),
+    });
+  } finally {
+    processing.value = false;
+  }
+}
+
+/**
+ * 渲染边缘检测像素化结果
+ */
+function renderEdgeDetectPixelArt() {
+  if (!edgeDetectResult.value || !pixelCanvas.value || !originalCanvas.value) return;
+
+  const { hLines, vLines } = edgeDetectResult.value;
+  const ctx = originalCanvas.value.getContext('2d')!;
+  const imageData = ctx.getImageData(0, 0, originalCanvas.value.width, originalCanvas.value.height);
+  const rgba = imageData.data;
+
+  // 使用网格进行采样
+  const { pixelated, pixelatedWidth, pixelatedHeight } = sampleWithGrid(
+    rgba,
+    originalCanvas.value.width,
+    originalCanvas.value.height,
+    hLines,
+    vLines,
+    edgeDetectParams.sampleMode,
+    edgeDetectParams.sampleWeightRatio,
+    edgeDetectParams.upscale,
+    edgeDetectParams.nativeRes
+  );
+
+  pixelCanvas.value.width = pixelatedWidth;
+  pixelCanvas.value.height = pixelatedHeight;
+
+  const pixelCtx = pixelCanvas.value.getContext('2d')!;
+  const outputImageData = pixelCtx.createImageData(pixelatedWidth, pixelatedHeight);
+
+  for (let i = 0; i < pixelated.length; i++) {
+    outputImageData.data[i] = pixelated[i] || 0;
+  }
+
+  pixelCtx.putImageData(outputImageData, 0, 0);
+  pixelCtx.imageSmoothingEnabled = false;
+}
+
+/**
+ * 下载边缘检测像素画
+ */
+function downloadEdgeDetectPixelArt() {
+  if (!pixelCanvas.value) return;
+
+  const width = pixelCanvas.value.width;
+  const height = pixelCanvas.value.height;
+
+  // 从 canvas 获取数据
+  const ctx = pixelCanvas.value.getContext('2d')!;
+  const imageData = ctx.getImageData(0, 0, width, height);
+  const rgbaData = imageData.data;
+
+  // 使用 upng-js 编码
+  const arrayBuffer = rgbaData.buffer.slice(rgbaData.byteOffset, rgbaData.byteOffset + rgbaData.byteLength);
+  const pngData = UPNG.encode([arrayBuffer], width, height, 0);
+  const blob = new Blob([pngData as BlobPart], { type: 'image/png' });
+
+  const pixelSize = edgeDetectResult.value?.pixelSize ?? edgeDetectParams.pixelSize;
+  saveAs(blob, `edge_detect_pixelart_size${pixelSize}_${Date.now()}.png`);
 }
 </script>
 

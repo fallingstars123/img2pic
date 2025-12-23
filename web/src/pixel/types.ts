@@ -1,5 +1,43 @@
 export type SampleMode = "center" | "average" | "weighted" | "direct";
 
+/**
+ * 边缘检测像素化参数
+ */
+export interface EdgeDetectParams {
+  // 边缘检测阈值 (0.0-1.0)，越低检测到的边缘越多
+  edgeThreshold: number;
+  // 最小网格大小（像素）
+  minGridSize: number;
+  // 最大网格大小（像素）
+  maxGridSize: number;
+  // 网格偏移 X（用于微调），支持小数步进
+  offsetX: number;
+  // 网格偏移 Y（用于微调），支持小数步进
+  offsetY: number;
+  // 像素大小（手动设置，0=自动检测）
+  pixelSize: number;
+  // 放大倍数
+  upscale: number;
+  // 是否使用原生分辨率（1像素=1网格）
+  nativeRes: boolean;
+  // 采样模式
+  sampleMode: SampleMode;
+  // 采样权重比例（用于 weighted 模式）
+  sampleWeightRatio: number;
+}
+
+/**
+ * 边缘检测结果
+ */
+export interface EdgeDetectResult {
+  // 检测到的像素大小
+  pixelSize: number;
+  // 水平网格线位置（y坐标）
+  hLines: number[];
+  // 垂直网格线位置（x坐标）
+  vLines: number[];
+}
+
 export interface PipelineParams {
   // WASM 加速开关
   wasmEnabled: boolean;
